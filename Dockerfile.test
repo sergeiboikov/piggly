@@ -1,0 +1,28 @@
+# Dockerfile for testing encoding issue
+FROM ruby:3.4-alpine
+
+# Install build dependencies for native gems
+RUN apk add --no-cache build-base postgresql-dev dos2unix
+
+# Install dependencies
+RUN gem install bundler
+
+# Set working directory
+WORKDIR /app
+
+# Copy the project files
+COPY . /app/
+
+# Fix Windows line endings
+RUN find /app -type f \( -name "*.rb" -o -name "*.sh" \) -exec dos2unix {} \;
+
+# Remove old Gemfile.lock and regenerate with current bundler
+RUN rm -f Gemfile.lock && bundle install
+
+# Set UTF-8 locale
+ENV LANG=C.UTF-8
+ENV LC_ALL=C.UTF-8
+
+# Default command
+CMD ["bash"]
+
