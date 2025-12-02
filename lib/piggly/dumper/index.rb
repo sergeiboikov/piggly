@@ -102,10 +102,10 @@ module Piggly
       # Load the index from disk
       def load_index
         contents =
-          unless File.exists?(path)
+          unless File.exist?(path)
             []
           else
-            YAML.load(File.read(path))
+            YAML.unsafe_load(File.read(path))
           end
 
         Util::Enumerable.index_by(contents){|x| x.identifier }

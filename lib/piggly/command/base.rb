@@ -28,7 +28,7 @@ module Piggly
         end
       end
 
-      # @return [PGconn]
+      # @return [PG::Connection]
       def connect(config)
         require "pg"
         require "erb"
@@ -39,7 +39,7 @@ module Piggly
              piggly/database.json
              config/database.json))
 
-        path = files.find{|x| File.exists?(x) } or
+        path = files.find{|x| File.exist?(x) } or
           raise "No database config files found: #{files.join(", ")}"
 
         specs =
@@ -48,13 +48,13 @@ module Piggly
             JSON.load(ERB.new(IO.read(path)).result)
           else
             require "yaml"
-            YAML.load(ERB.new(IO.read(path)).result)
+            YAML.unsafe_load(ERB.new(IO.read(path)).result)
           end
 
         spec = (specs.is_a?(Hash) and specs[config.connection_name]) or
           raise "Database '#{config.connection_name}' is not configured in #{path}"
 
-        PGconn.connect(spec["host"], spec["port"], nil, nil,
+        PG::Connection.connect(spec["host"], spec["port"], nil, nil,
           spec["database"], spec["username"], spec["password"])
       end
 

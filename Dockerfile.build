@@ -24,10 +24,6 @@ RUN gem install bundler:2.3.26 && \
 # Copy the rest of the application
 COPY . /app/
 
-# Patch gemspec for Ruby 3.x compatibility - update pg dependency
-RUN sed -i "s/s\.add_dependency 'pg',.*$/s.add_dependency 'pg', '>= 0.18.4'/" piggly.gemspec && \
-    sed -i "s/s\.add_dependency 'treetop',.*$/s.add_dependency 'treetop', '>= 1.4.14'/" piggly.gemspec
-
 # Build the gem
 RUN gem build piggly.gemspec
 
@@ -40,10 +36,5 @@ FROM scratch AS export
 COPY --from=builder /output/*.gem /
 
 # Usage:
-# Build: docker build -f Dockerfile.build -t piggly-builder .
-# Extract: docker create --name piggly-temp piggly-builder
-#          docker cp piggly-temp:/piggly-2.3.1.gem .
-#          docker rm piggly-temp
-# Or use DOCKER_BUILDKIT=1 and --output flag:
-# DOCKER_BUILDKIT=1 docker build -f Dockerfile.build --target=export --output=. .
+# docker build -f Dockerfile.build --target=export --output=. .
 
