@@ -3,11 +3,11 @@
 
 # Script to reproduce the encoding bug with Cyrillic comments in SQL
 
-$LOAD_PATH.unshift(File.expand_path('lib', __dir__))
+$LOAD_PATH.unshift(File.expand_path('../lib', __dir__))
 require 'piggly'
 
 # Read the SQL file with Cyrillic comments
-sql_file = File.join(__dir__, 'test', 'update_quality.sql')
+sql_file = File.join(__dir__, 'sql', 'update_quality.sql')
 sql_content = File.read(sql_file, encoding: 'UTF-8')
 
 puts "=" * 80
