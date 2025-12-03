@@ -36,5 +36,5 @@ FROM scratch AS export
 COPY --from=builder /output/*.gem /
 
 # Usage:
-# docker build -f Dockerfile.build --target=export --output=. .
+# docker build -f Dockerfile.build --target=export --output=./builds .
 
