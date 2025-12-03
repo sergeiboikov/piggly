@@ -494,6 +494,7 @@ grammar Piggly
     / 'set'
     / 'start'
     / 'notify'
+    / 'call'
     / 'with' ) ![a-z0-9] <Piggly::Parser::Nodes::TKeyword>
   end
 

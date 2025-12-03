@@ -8,11 +8,11 @@ module Piggly
     class SkeletonProcedure
 
       attr_reader :oid, :name, :type, :arg_types, :arg_modes, :arg_names,
-        :strict, :setof, :volatility, :secdef, :identifier
+        :strict, :setof, :volatility, :secdef, :identifier, :prokind
 
-      def initialize(oid, name, strict, secdef, setof, type, volatility, arg_modes, arg_names, arg_types, arg_defaults)
-        @oid, @name, @strict, @secdef, @type, @volatility, @setof, @arg_modes, @arg_names, @arg_types, @arg_defaults =
-          oid, name, strict, secdef, type, volatility, setof, arg_modes, arg_names, arg_types, arg_defaults
+      def initialize(oid, name, strict, secdef, setof, type, volatility, arg_modes, arg_names, arg_types, arg_defaults, prokind = 'f')
+        @oid, @name, @strict, @secdef, @type, @volatility, @setof, @arg_modes, @arg_names, @arg_types, @arg_defaults, @prokind =
+          oid, name, strict, secdef, type, volatility, setof, arg_modes, arg_names, arg_types, arg_defaults, prokind
 
 
         @identifier = Digest::MD5.hexdigest(signature)
@@ -44,13 +44,22 @@ module Piggly
         @secdef ? "security definer" : nil
       end
 
-      # Returns source SQL function definition statement
+      # Returns source SQL function/procedure definition statement
       # @return [String]
       def definition(body)
-        [%[create or replace function #{name.quote} (#{arguments})],
-         %[ returns #{setof}#{type.quote} as $__PIGGLY__$],
-         body,
-         %[$__PIGGLY__$ language plpgsql #{strictness} #{security} #{@volatility}]].join("\n")
+        if @prokind == 'p'
+          # PostgreSQL PROCEDURE (introduced in PG11)
+          [%[create or replace procedure #{name.quote} (#{arguments})],
+           %[ language plpgsql #{security} as $__PIGGLY__$],
+           body,
+           %[$__PIGGLY__$]].join("\n")
+        else
+          # PostgreSQL FUNCTION
+          [%[create or replace function #{name.quote} (#{arguments})],
+           %[ returns #{setof}#{type.quote} as $__PIGGLY__$],
+           body,
+           %[$__PIGGLY__$ language plpgsql #{strictness} #{security} #{@volatility}]].join("\n")
+        end
       end
 
       # @return [String]
