@@ -8,7 +8,8 @@ module Piggly
     class ReifiedProcedure < SkeletonProcedure
 
       def initialize(source, oid, name, strict, secdef, setof, type, volatility, arg_modes, arg_names, arg_types, arg_defaults)
-        @source = source.strip
+        # Ensure source is UTF-8 encoded
+        @source = source.to_s.force_encoding('UTF-8').strip
 
         if type.name == "record" and type.schema == "pg_catalog" and arg_modes.include?("t")
           prefix       = arg_modes.take_while{|m| m != "t" }.length
@@ -36,7 +37,7 @@ module Piggly
                 "last coverage run. You must restore the source manually."
         end
 
-        File.open(source_path(config), "wb"){|io| io.write(@source) }
+        File.open(source_path(config), "wb:UTF-8"){|io| io.write(@source) }
       end
 
       # @return [SkeletonProcedure]

@@ -54,8 +54,13 @@ module Piggly
         spec = (specs.is_a?(Hash) and specs[config.connection_name]) or
           raise "Database '#{config.connection_name}' is not configured in #{path}"
 
-        PG::Connection.connect(spec["host"], spec["port"], nil, nil,
+        conn = PG::Connection.connect(spec["host"], spec["port"], nil, nil,
           spec["database"], spec["username"], spec["password"])
+        
+        # Set client encoding to UTF-8 to properly handle Cyrillic and other Unicode characters
+        conn.set_client_encoding('UTF8')
+        
+        conn
       end
 
       # @return [Enumerable<SkeletonProcedure>]

@@ -17,8 +17,10 @@ module Piggly
           p = parser
 
           begin
+            # Ensure input is UTF-8 encoded
+            input = string.dup.force_encoding('UTF-8')
             # Downcase input for case-insensitive parsing
-            input = string.downcase
+            input = input.downcase
             tree = p.parse(input)
             tree or raise Failure, "#{p.failure_reason}"
           ensure

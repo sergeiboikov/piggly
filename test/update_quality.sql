@@ -24,7 +24,7 @@ BEGIN
     ELSE
       IF (l_quality < 50) THEN
         l_quality := l_quality + 1;
-        IF l_name = 'Backstage passes to a TAFKAL80ETC concert' THEN
+        IF l_name = 'Тестовое значение' THEN
           IF l_sell_in < 11 THEN
             IF l_quality < 50 THEN
               l_quality := l_quality + 1;

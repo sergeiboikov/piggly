@@ -65,7 +65,7 @@ module Piggly
 
       # @return [String]
       def load_source(config)
-        File.read(source_path(config))
+        File.read(source_path(config), encoding: 'UTF-8')
       end
 
       # @return [String]
