@@ -1,0 +1,105 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [ master, develop ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:15.6
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: piggly_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      PGHOST: localhost
+      PGUSER: postgres
+      PGPASSWORD: postgres
+      PGDATABASE: piggly_test
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: '3.4'
+        bundler-cache: true
+
+    - name: Install dependencies
+      run: |
+        bundle install --jobs 4 --retry 3
+
+    - name: Set up database
+      run: |
+        psql -h localhost -U postgres -c "CREATE EXTENSION IF NOT EXISTS plpgsql;"
+
+    - name: Run tests
+      run: |
+        bundle exec rake spec
+
+    - name: Upload coverage reports
+      uses: actions/upload-artifact@v3
+      with:
+        name: coverage-report
+        path: coverage/
+
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: '3.4'
+        bundler-cache: true
+
+    - name: Install dependencies
+      run: |
+        bundle install --jobs 4 --retry 3
+
+    - name: Check for syntax errors
+      run: |
+        find lib -name '*.rb' -exec ruby -c {} \;
+        find spec -name '*.rb' -exec ruby -c {} \;
+
+  build:
+    runs-on: ubuntu-latest
+    needs: [test, lint]
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: '3.4'
+        bundler-cache: true
+
+    - name: Build gem
+      run: |
+        gem build piggly.gemspec
+
+    - name: Upload gem artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: piggly-gem
+        path: '*.gem'
+

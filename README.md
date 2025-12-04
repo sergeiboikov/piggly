@@ -1,3 +1,4 @@
+[![CI](https://github.com/sergeiboikov/piggly/actions/workflows/ci.yml/badge.svg)](https://github.com/sergeiboikov/piggly/actions/workflows/ci.yml)
 # Piggly
 
 Code coverage reports for PostgreSQL PL/pgSQL stored procedures
