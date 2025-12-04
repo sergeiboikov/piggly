@@ -36,18 +36,24 @@ module Piggly
 
       # Returns treetop parser (recompiled as needed)
       def parser
+        return @parser if @parser
+        
         load_support
 
         # @todo: Compare with the version of treetop
         if Util::File.stale?(parser_path, grammar_path)
           # Regenerate the parser when the grammar is updated
           Treetop::Compiler::GrammarCompiler.new.compile(grammar_path, parser_path)
+          # Remove existing constant before loading to avoid warnings
+          Object.send(:remove_const, :PigglyParser) if Object.const_defined?(:PigglyParser)
+          Object.send(:remove_const, :PigglyParserParser) if Object.const_defined?(:PigglyParserParser)
           load parser_path
+          @parser = nil  # Clear cache when regenerating
         else
-          require parser_path
+          require parser_path unless defined?(::PigglyParser::Parser)
         end
 
-        ::PigglyParser.new
+        @parser ||= ::PigglyParser::Parser.new
       end
     
     private

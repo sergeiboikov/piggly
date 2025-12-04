@@ -6,3 +6,4 @@ coverage/
 .bundle/
 vendor/bundle/
 *.gem
+piggly/*

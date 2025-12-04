@@ -1,6 +1,6 @@
 # encoding: UTF-8
 
-grammar Piggly
+grammar PigglyParser
 
   rule start
     tSpace?

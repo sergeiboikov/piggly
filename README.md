@@ -53,8 +53,8 @@ To install the latest from github:
     $ bundle install
     $ bundle exec rake spec
 
-    $ rake gem
-    $ gem install pkg/*.gem --no-rdoc --no-ri
+    $ gem build piggly.gemspec
+    $ gem install piggly-*.gem
 
 To install the latest release:
 
