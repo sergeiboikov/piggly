@@ -1,11 +1,10 @@
-FROM ruby:3.0-slim AS builder
+FROM ruby:3.4-alpine AS builder
 
 # Install build dependencies
-RUN apt-get update && apt-get install -y \
-    build-essential \
-    libpq-dev \
-    git \
-    && rm -rf /var/lib/apt/lists/*
+RUN apk add --no-cache \
+    build-base \
+    postgresql-dev \
+    git
 
 # Set working directory
 WORKDIR /app
@@ -14,8 +13,8 @@ WORKDIR /app
 COPY piggly.gemspec /app/
 COPY lib/piggly/version.rb /app/lib/piggly/
 
-# Copy Gemfile and Gemfile.lock
-COPY Gemfile Gemfile.lock /app/
+# Copy Gemfile
+COPY Gemfile /app/
 
 # Install bundler and dependencies
 RUN gem install bundler:2.3.26 && \
