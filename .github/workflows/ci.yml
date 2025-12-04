@@ -52,7 +52,7 @@ jobs:
         bundle exec rake spec
 
     - name: Upload coverage reports
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: coverage-report
         path: coverage/
@@ -98,7 +98,7 @@ jobs:
         gem build piggly.gemspec
 
     - name: Upload gem artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: piggly-gem
         path: '*.gem'
