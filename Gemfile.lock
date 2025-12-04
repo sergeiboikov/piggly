@@ -33,6 +33,7 @@ GEM
     logger (1.7.0)
     minitest (5.26.2)
     pg (1.6.2-x64-mingw-ucrt)
+    pg (1.6.2-x86_64-linux)
     polyglot (0.3.5)
     power_assert (3.0.1)
     rake (13.3.1)
@@ -68,6 +69,7 @@ GEM
 
 PLATFORMS
   x64-mingw-ucrt
+  x86_64-linux
 
 DEPENDENCIES
   activerecord (~> 8.1)
