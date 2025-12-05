@@ -1,7 +1,9 @@
 [![CI](https://github.com/sergeiboikov/piggly/actions/workflows/ci.yml/badge.svg)](https://github.com/sergeiboikov/piggly/actions/workflows/ci.yml)
-# Piggly
+# Piggly-NSD
 
 Code coverage reports for PostgreSQL PL/pgSQL stored procedures
+
+**Note:** This is a maintained fork of the original [piggly](https://github.com/kputnam/piggly) project by Kyle Putnam.
 
 ![Screenshot](https://kputnam.github.io/piggly/images/example.png)
 
@@ -44,22 +46,28 @@ these events and generates prettified source code that is annotated with coverag
 * The [ruby-pg driver](http://bitbucket.org/ged/ruby-pg/): `gem install pg`
 * The examples require ActiveRecord: `gem install activerecord`
 
+## Versioning
+
+This fork continues the version numbering from the original piggly project:
+- **2.3.1** - Last version of original piggly by Kyle Putnam
+- **2.3.2** - NSD fork with UTF-8 encoding support and updated dependencies
+
 ## How to Install
 
 To install the latest from github:
 
-    $ git clone git://github.com/kputnam/piggly.git
+    $ git clone https://github.com/sergeiboikov/piggly.git
     $ cd piggly
     $ bundle install
     $ bundle exec rake spec
 
-    $ gem uninstall piggly  # If piggly was installed earlier
+    $ gem uninstall piggly-nsd  # If piggly-nsd was installed earlier
     $ gem build piggly.gemspec
-    $ gem install piggly-*.gem
+    $ gem install piggly-nsd-*.gem
 
 To install the latest release:
 
-    $ gem install piggly
+    $ gem install piggly-nsd
 
 ## Usage
 
@@ -159,4 +167,4 @@ Once the report is built you can open it in `piggly/reports/index.html`.
 
 ## Bugs & Issues
 
-Please report any issues or feature requests on the [github tracker](http://github.com/kputnam/piggly/issues).
+Please report any issues or feature requests on the [github tracker](https://github.com/sergeiboikov/piggly/issues).
