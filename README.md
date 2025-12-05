@@ -53,6 +53,7 @@ To install the latest from github:
     $ bundle install
     $ bundle exec rake spec
 
+    $ gem uninstall piggly  # If piggly was installed earlier
     $ gem build piggly.gemspec
     $ gem install piggly-*.gem
 
@@ -91,6 +92,9 @@ Now you are ready to recompile and install your stored procedures. This reads th
     Compiling snippets
     Compiling iterate
     tracing 5 procedures
+
+For running the development version use the following command:
+    `ruby bin/piggly trace`
 
 This caches the original version (without instrumentation) in `piggly/cache` so you can restore them
 later. Piggly will only recompile procedures that have changed in the database since it last
