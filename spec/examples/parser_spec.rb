@@ -88,6 +88,8 @@ describe Parser do
 
     context "when the generated parser is older than the grammar" do
       before do
+        # Reset the cached parser
+        Piggly::Parser.instance_variable_set(:@parser, nil)
         allow(Util::File).to receive(:stale?).and_return(true)
       end
 
@@ -99,10 +101,11 @@ describe Parser do
         expect(Treetop::Compiler::GrammarCompiler).to receive(:new).
           and_return(compiler)
 
-        expect(Parser).to receive(:load).
-          with(Parser.parser_path)
+        expect(Piggly::Parser).to receive(:load).
+          with(Parser.parser_path).and_call_original
 
-        Parser.parser
+        result = Parser.parser
+        expect(result).to be_a(PigglyParser)
       end
 
       it "returns an instance of PigglyParser" do

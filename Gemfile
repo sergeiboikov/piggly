@@ -1,7 +1,7 @@
 source "http://rubygems.org"
 
 gem "pg",           "~> 1.6"
-gem "treetop",      "~> 1.4"
+gem "treetop",      "~> 1.6"
 
 group :test, :development do
   gem "rake",                     :require => false
