@@ -8,11 +8,11 @@ module Piggly
     class SkeletonProcedure
 
       attr_reader :oid, :name, :type, :arg_types, :arg_modes, :arg_names,
-        :strict, :setof, :volatility, :secdef, :identifier, :prokind
+        :strict, :setof, :volatility, :secdef, :identifier, :prokind, :language
 
-      def initialize(oid, name, strict, secdef, setof, type, volatility, arg_modes, arg_names, arg_types, arg_defaults, prokind = 'f')
-        @oid, @name, @strict, @secdef, @type, @volatility, @setof, @arg_modes, @arg_names, @arg_types, @arg_defaults, @prokind =
-          oid, name, strict, secdef, type, volatility, setof, arg_modes, arg_names, arg_types, arg_defaults, prokind
+      def initialize(oid, name, strict, secdef, setof, type, volatility, arg_modes, arg_names, arg_types, arg_defaults, prokind = "f", language = "plpgsql")
+        @oid, @name, @strict, @secdef, @type, @volatility, @setof, @arg_modes, @arg_names, @arg_types, @arg_defaults, @prokind, @language =
+          oid, name, strict, secdef, type, volatility, setof, arg_modes, arg_names, arg_types, arg_defaults, prokind, language
 
 
         @identifier = Digest::MD5.hexdigest(signature)
