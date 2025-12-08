@@ -46,9 +46,10 @@ module Piggly
                   toc(@profile[procedure])
                 end
 
+                tag :a, "Return to index", :href => "index.html", :class => "return"
+
                 timestamp
 
-                tag :a, "Return to index", :href => "index.html", :class => "return"
               end
             end
           end

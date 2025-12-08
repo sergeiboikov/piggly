@@ -33,43 +33,45 @@ module Piggly
     private
 
       def table(procedures, index)
-        tag :table, :class => "summary sortable" do
-          tag :tr do
-            tag :th, "Procedure"
-            tag :th, "Blocks"
-            tag :th, "Loops"
-            tag :th, "Branches"
-            tag :th, "Block Coverage"
-            tag :th, "Loop Coverage"
-            tag :th, "Branch Coverage"
-          end
-
-          procedures.each_with_index do |procedure, k|
-            summary = @profile.summary(procedure)
-            row     = k.modulo(2) == 0 ? "even" : "odd"
-            label   = index.label(procedure)
-
-            tag :tr, :class => row do
-              unless summary.include?(:block) or summary.include?(:loop) or summary.include?(:branch)
-                # Parser couldn't parse this file
-                tag :td, label, :class => "file fail"
-                tag(:td, :class => "count") { tag :span, -1, :style => "display:none" }
-                tag(:td, :class => "count") { tag :span, -1, :style => "display:none" }
-                tag(:td, :class => "count") { tag :span, -1, :style => "display:none" }
-                tag(:td, :class => "pct") { tag :span, -1, :style => "display:none" }
-                tag(:td, :class => "pct") { tag :span, -1, :style => "display:none" }
-                tag(:td, :class => "pct") { tag :span, -1, :style => "display:none" }
-              else
-                tag(:td, :class => "file") { tag :a, label, :href => procedure.identifier + ".html" }
-                tag :td, (summary[:block][:count]  || 0), :class => "count"
-                tag :td, (summary[:loop][:count]   || 0), :class => "count"
-                tag :td, (summary[:branch][:count] || 0), :class => "count"
-                tag(:td, :class => "pct") { percent(summary[:block][:percent])  }
-                tag(:td, :class => "pct") { percent(summary[:loop][:percent])   }
-                tag(:td, :class => "pct") { percent(summary[:branch][:percent]) }
-              end
+        tag :div, :class => "table-wrapper" do
+          tag :table, :class => "summary sortable" do
+            tag :tr do
+              tag :th, "Procedure"
+              tag :th, "Blocks"
+              tag :th, "Loops"
+              tag :th, "Branches"
+              tag :th, "Block Coverage"
+              tag :th, "Loop Coverage"
+              tag :th, "Branch Coverage"
             end
 
+            procedures.each_with_index do |procedure, k|
+              summary = @profile.summary(procedure)
+              row     = k.modulo(2) == 0 ? "even" : "odd"
+              label   = index.label(procedure)
+
+              tag :tr, :class => row do
+                unless summary.include?(:block) or summary.include?(:loop) or summary.include?(:branch)
+                  # Parser couldn't parse this file
+                  tag :td, label, :class => "file fail"
+                  tag(:td, :class => "count") { tag :span, -1, :style => "display:none" }
+                  tag(:td, :class => "count") { tag :span, -1, :style => "display:none" }
+                  tag(:td, :class => "count") { tag :span, -1, :style => "display:none" }
+                  tag(:td, :class => "pct") { tag :span, -1, :style => "display:none" }
+                  tag(:td, :class => "pct") { tag :span, -1, :style => "display:none" }
+                  tag(:td, :class => "pct") { tag :span, -1, :style => "display:none" }
+                else
+                  tag(:td, :class => "file") { tag :a, label, :href => procedure.identifier + ".html" }
+                  tag :td, (summary[:block][:count]  || 0), :class => "count"
+                  tag :td, (summary[:loop][:count]   || 0), :class => "count"
+                  tag :td, (summary[:branch][:count] || 0), :class => "count"
+                  tag(:td, :class => "pct") { percent(summary[:block][:percent])  }
+                  tag(:td, :class => "pct") { percent(summary[:loop][:percent])   }
+                  tag(:td, :class => "pct") { percent(summary[:branch][:percent]) }
+                end
+              end
+
+            end
           end
         end
       end
