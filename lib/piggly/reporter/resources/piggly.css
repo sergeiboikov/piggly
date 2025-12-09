@@ -79,7 +79,7 @@ a img {
 
 .return {
   display: block;
-  width: 140px;
+  width: fit-content;
   margin-left: 1rem;
   padding: 0.5rem 1rem;
   background-color: var(--color-primary);
@@ -236,21 +236,20 @@ p.summary {
   max-height: 700px;
   overflow-y: auto;
   overflow-x: auto;
-  margin-top: 1rem;
-  margin-bottom: 2rem;
-  border: 1px solid var(--color-border);
+  border-top: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-sm);
+  margin-top: 1rem;
+  margin-bottom: 1rem;
 }
 
 table.summary {
   width: 100%;
-  margin-bottom: 0;
   border-spacing: 0;
   border-collapse: separate;
   background: var(--color-bg);
-  border: none;
-  border-radius: 0;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
   overflow: visible;
   box-shadow: none;
 }
@@ -263,11 +262,32 @@ table.summary th {
   letter-spacing: 0.05em;
   color: var(--color-text-secondary);
   background: var(--color-bg-tertiary);
-  border-bottom: 2px solid var(--color-border);
-  text-align: left;
+  text-align: center;
   position: sticky;
   top: 0;
   z-index: 10;
+}
+
+#sorttable_sortfwdind,
+#sorttable_sortrevind {
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 14px;
+  color: var(--color-text-secondary);
+}
+
+table.summary.sortable th {
+  cursor: pointer;
+  user-select: none;
+  padding-right: 2.5rem;
+  position: sticky;
+}
+
+table.summary.sortable th:hover {
+  background: var(--color-bg-secondary);
+  color: var(--color-text-secondary);
 }
 
 table.summary td {
@@ -318,22 +338,22 @@ table.summary td.count {
 
 table.summary td.pct {
   min-width: 140px;
+  text-align: center;
 }
 
 table.summary td.pct td.num {
   padding: 0;
   min-width: 65px;
-  text-align: right;
+  text-align: center;
   border: 0;
   font-size: 13px;
   font-weight: 600;
-  padding-right: 0.75rem;
 }
 
 table.summary td.pct td.graph {
   padding: 0;
   min-width: 80px;
-  text-align: right;
+  text-align: center;
   border: 0;
 }
 
@@ -342,6 +362,7 @@ table.summary td.pct table {
   padding: 0;
   border-spacing: 0;
   border-collapse: collapse;
+  margin: 0 auto;
 }
 
 /* COVERAGE GRAPH */
@@ -363,28 +384,40 @@ table.graph td {
   height: 100%;
 }
 
-/* Low coverage (0-50%) */
-table.low td.covered {
-  background: linear-gradient(90deg, #fee2e2, #fecaca);
+/* Zero coverage (0%) */
+table.zero td.covered {
+  background-color: var(--color-danger-light);
+  width: 100% !important;
 }
-table.low td.uncovered {
+
+/* Low coverage (0-30%) */
+table.low td.covered {
   background-color: var(--color-danger);
 }
-
-/* Mid coverage (50-99%) */
-table.mid td.covered {
-  background: linear-gradient(90deg, #fef3c7, #fde68a);
+table.low td.uncovered {
+  background-color: var(--color-danger-light);
 }
-table.mid td.uncovered {
+
+/* Mid coverage (31-60%) */
+table.mid td.covered {
   background-color: var(--color-warning);
 }
+table.mid td.uncovered {
+  background-color: var(--color-warning-light);
+}
 
-/* High coverage (100%) */
+/* High coverage (61-99%) */
 table.high td.covered {
-  background: linear-gradient(90deg, #d1fae5, #a7f3d0);
+  background-color: var(--color-success);
 }
 table.high td.uncovered {
+  background-color: var(--color-success-light);
+}
+
+/* Full coverage (100%) */
+table.full td.covered {
   background-color: var(--color-success);
+  width: 100% !important;
 }
 
 /* SYNTAX HIGHLIGHTING - Modern color scheme */
