@@ -16,8 +16,8 @@ module Piggly
       end
 
       it "must end with a semicolon" do
-        lambda { parse_some(:statement, 'a := 10') }.should raise_error
-        lambda { parse(:statement, 'a := 10') }.should raise_error
+        expect { parse_some(:statement, 'a := 10') }.to raise_error(Piggly::Parser::Failure)
+        expect { parse(:statement, 'a := 10') }.to raise_error(Piggly::Parser::Failure)
       end
 
       it "can use := or =" do

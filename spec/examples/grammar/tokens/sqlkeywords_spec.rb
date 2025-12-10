@@ -14,13 +14,13 @@ module Piggly
 
         it "cannot have trailing characters" do
           GrammarHelper::SQLWORDS.each do |k|
-            lambda{ parse(:sqlKeyword, "#{k}abc") }.should raise_error
+            expect{ parse(:sqlKeyword, "#{k}abc") }.to raise_error(Piggly::Parser::Failure)
           end
         end
 
         it "cannot have preceeding characters" do
           GrammarHelper::SQLWORDS.each do |k|
-            lambda{ parse(:sqlKeyword, "abc#{k}") }.should raise_error
+            expect{ parse(:sqlKeyword, "#{k}abc") }.to raise_error(Piggly::Parser::Failure)
           end
         end
 
