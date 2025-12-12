@@ -7,7 +7,7 @@ module Piggly
     #
     class ReifiedProcedure < SkeletonProcedure
 
-      def initialize(source, oid, name, strict, secdef, setof, type, volatility, arg_modes, arg_names, arg_types, arg_defaults, prokind = 'f')
+      def initialize(source, oid, name, strict, secdef, setof, type, volatility, arg_modes, arg_names, arg_types, arg_defaults, prokind = "f", language = "plpgsql")
         # Ensure source is UTF-8 encoded
         @source = source.to_s.force_encoding('UTF-8').strip
 
@@ -21,7 +21,7 @@ module Piggly
           setof        = false
         end
 
-        super(oid, name, strict, secdef, setof, type, volatility, arg_modes, arg_names, arg_types, arg_defaults, prokind)
+        super(oid, name, strict, secdef, setof, type, volatility, arg_modes, arg_names, arg_types, arg_defaults, prokind, language)
       end
 
       # @return [String]
@@ -44,7 +44,7 @@ module Piggly
       def skeleton
         SkeletonProcedure.new(@oid, @name, @strict, @secdef, @setof, @type,
                               @volatility, @arg_modes, @arg_names, @arg_types,
-                              @arg_defaults, @prokind)
+                              @arg_defaults, @prokind, @language)
       end
 
       def skeleton?
@@ -103,6 +103,7 @@ module Piggly
             ret.typname       as type,
             pro.prosrc        as source,
             pro.pronargs      as arg_count,
+            lang.lanname	    as language,
             array_to_string(pro.proargmodes, ',') as arg_modes,
             array_to_string(pro.proargnames, ',') as arg_names,
             case when proallargtypes is not null then
@@ -120,8 +121,10 @@ module Piggly
           from pg_proc as pro,
                pg_type as ret,
                pg_namespace as nschema,
-               pg_namespace as rschema
+               pg_namespace as rschema,
+               pg_language	as lang
           where pro.pronamespace = nschema.oid
+            and pro.prolang = lang.oid
             and ret.typnamespace = rschema.oid
             and pro.proname not like 'piggly_%'
             and pro.prorettype = ret.oid
@@ -152,7 +155,8 @@ module Piggly
             defaults(hash["arg_defaults"],
                      hash["arg_defaults_count"].to_i,
                      hash["arg_count"].to_i),
-            hash["prokind"].to_s)
+            hash["prokind"].to_s,
+            hash["language"].to_s)
       end
 
       def coalesce(value, default)

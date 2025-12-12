@@ -7,7 +7,7 @@ module Piggly
     describe "expressionUntilSemiColon" do
       it "does not consume semicolon" do
         # parser stops in front of THEN and dies
-        lambda{ parse(:expressionUntilSemiColon, 'abc;') }.should raise_error
+        expect{ parse(:expressionUntilSemiColon, 'abc;') }.to raise_error(Piggly::Parser::Failure)
 
         node, rest = parse_some(:expressionUntilSemiColon, 'abc; xyz')
         rest.should == '; xyz'
@@ -110,19 +110,19 @@ module Piggly
     describe "expressionUntilThen" do
       it "does not consume THEN token" do
         # parser stops in front of THEN and dies
-        lambda{ parse(:expressionUntilThen, 'abc THEN') }.should raise_error
+        expect{ parse(:expressionUntilThen, 'abc THEN') }.to raise_error(Piggly::Parser::Failure)
 
         node, rest = parse_some(:expressionUntilThen, 'abc THEN xyz')
         rest.should == 'THEN xyz'
       end
 
       it "cannot be a blank expression" do
-        lambda{ parse_some(:expressionUntilThen, ' THEN') }.should raise_error
+        expect{ parse_some(:expressionUntilThen, ' THEN') }.to raise_error(Piggly::Parser::Failure)
       end
 
       it "cannot be a comment" do
-        lambda{ parse_some(:expressionUntilThen, "/* comment */ THEN") }.should raise_error
-        lambda{ parse_some(:expressionUntilThen, "-- comment\n THEN") }.should raise_error
+        expect{ parse_some(:expressionUntilThen, "/* comment */ THEN") }.to raise_error(Piggly::Parser::Failure)
+        expect{ parse_some(:expressionUntilThen, "-- comment\n THEN") }.to raise_error(Piggly::Parser::Failure)
       end
 
       it "can be a string" do
@@ -205,19 +205,19 @@ module Piggly
     describe "expressionUntilLoop" do
       it "does not consume LOOP token" do
         # parser stops in front of LOOP and dies
-        lambda{ parse(:expressionUntilLoop, 'abc LOOP') }.should raise_error
+        expect{ parse(:expressionUntilLoop, 'abc LOOP') }.to raise_error(Piggly::Parser::Failure)
 
         node, rest = parse_some(:expressionUntilLoop, 'abc LOOP xyz')
         rest.should == 'LOOP xyz'
       end
 
       it "cannot be a blank expression" do
-        lambda{ parse_some(:expressionUntilLoop, ' LOOP') }.should raise_error
+        expect{ parse_some(:expressionUntilLoop, ' LOOP') }.to raise_error(Piggly::Parser::Failure)
       end
 
       it "cannot be a comment" do
-        lambda{ parse_some(:expressionUntilLoop, "/* comment */ LOOP") }.should raise_error
-        lambda{ parse_some(:expressionUntilLoop, "-- comment\n LOOP") }.should raise_error
+        expect{ parse_some(:expressionUntilLoop, "/* comment */ LOOP") }.to raise_error(Piggly::Parser::Failure)
+        expect{ parse_some(:expressionUntilLoop, "-- comment\n LOOP") }.to raise_error(Piggly::Parser::Failure)
       end
 
       it "can be a string" do

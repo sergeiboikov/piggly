@@ -7,7 +7,7 @@ module Piggly
     describe "labels" do
       it "must be enclosed in << and >>" do
         ['', 'a', 'abc', '<< a', 'a >>'].test_each do |s|
-          lambda{ parse(:tLabelDefinition, s) }.should raise_error
+          expect{ parse(:tLabelDefinition, s) }.to raise_error(Piggly::Parser::Failure)
         end
       end
 
@@ -25,7 +25,7 @@ module Piggly
 
       it "cannot be multiple unquoted words" do
         ["<< a b >>", "<< ab cd >>"].test_each do |s|
-          lambda{ parse(:tLabelDefinition, s) }.should raise_error
+          expect{ parse(:tLabelDefinition, s) }.to raise_error(Piggly::Parser::Failure)
         end
       end
 

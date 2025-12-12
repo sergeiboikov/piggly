@@ -14,8 +14,8 @@ module Piggly
       end
 
       it "must end with a semicolon" do
-        lambda{ parse(:statement, 'SELECT id FROM users') }.should raise_error
-        lambda{ parse_some(:statement, 'SELECT id FROM users') }.should raise_error
+        expect{ parse(:statement, 'SELECT id FROM users') }.to raise_error(Piggly::Parser::Failure)
+        expect{ parse_some(:statement, 'SELECT id FROM users') }.to raise_error(Piggly::Parser::Failure)
       end
 
       it "can contain comments" do
