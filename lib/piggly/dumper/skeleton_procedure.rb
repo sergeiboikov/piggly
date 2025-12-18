@@ -8,11 +8,11 @@ module Piggly
     class SkeletonProcedure
 
       attr_reader :oid, :name, :type, :arg_types, :arg_modes, :arg_names,
-        :strict, :setof, :volatility, :secdef, :identifier
+        :strict, :setof, :volatility, :secdef, :identifier, :prokind, :language
 
-      def initialize(oid, name, strict, secdef, setof, type, volatility, arg_modes, arg_names, arg_types, arg_defaults)
-        @oid, @name, @strict, @secdef, @type, @volatility, @setof, @arg_modes, @arg_names, @arg_types, @arg_defaults =
-          oid, name, strict, secdef, type, volatility, setof, arg_modes, arg_names, arg_types, arg_defaults
+      def initialize(oid, name, strict, secdef, setof, type, volatility, arg_modes, arg_names, arg_types, arg_defaults, prokind = "f", language = "plpgsql")
+        @oid, @name, @strict, @secdef, @type, @volatility, @setof, @arg_modes, @arg_names, @arg_types, @arg_defaults, @prokind, @language =
+          oid, name, strict, secdef, type, volatility, setof, arg_modes, arg_names, arg_types, arg_defaults, prokind, language
 
 
         @identifier = Digest::MD5.hexdigest(signature)
@@ -44,13 +44,22 @@ module Piggly
         @secdef ? "security definer" : nil
       end
 
-      # Returns source SQL function definition statement
+      # Returns source SQL function/procedure definition statement
       # @return [String]
       def definition(body)
-        [%[create or replace function #{name.quote} (#{arguments})],
-         %[ returns #{setof}#{type.quote} as $__PIGGLY__$],
-         body,
-         %[$__PIGGLY__$ language plpgsql #{strictness} #{security} #{@volatility}]].join("\n")
+        if @prokind == 'p'
+          # PostgreSQL PROCEDURE (introduced in PG11)
+          [%[create or replace procedure #{name.quote} (#{arguments})],
+           %[ language plpgsql #{security} as $__PIGGLY__$],
+           body,
+           %[$__PIGGLY__$]].join("\n")
+        else
+          # PostgreSQL FUNCTION
+          [%[create or replace function #{name.quote} (#{arguments})],
+           %[ returns #{setof}#{type.quote} as $__PIGGLY__$],
+           body,
+           %[$__PIGGLY__$ language plpgsql #{strictness} #{security} #{@volatility}]].join("\n")
+        end
       end
 
       # @return [String]
@@ -65,7 +74,7 @@ module Piggly
 
       # @return [String]
       def load_source(config)
-        File.read(source_path(config))
+        File.read(source_path(config), encoding: 'UTF-8')
       end
 
       # @return [String]
@@ -75,13 +84,13 @@ module Piggly
       def purge_source(config)
         path = source_path(config)
 
-        FileUtils.rm_r(path) if File.exists?(path)
+        FileUtils.rm_r(path) if File.exist?(path)
 
         file = Compiler::TraceCompiler.new(config).cache_path(path)
-        FileUtils.rm_r(file) if File.exists?(file)
+        FileUtils.rm_r(file) if File.exist?(file)
 
         file = Reporter::Base.new(config).report_path(path, ".html")
-        FileUtils.rm_r(file) if File.exists?(file)
+        FileUtils.rm_r(file) if File.exist?(file)
       end
 
       # @return [SkeletonProcedure]

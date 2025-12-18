@@ -1,11 +1,22 @@
-begin
-  require "spec"
-rescue LoadError
-  require "rspec"
-end
-
+require "rspec"
 require "ostruct"
 require File.expand_path("#{File.dirname(__FILE__)}/../lib/piggly")
+
+# RSpec 3 configuration
+RSpec.configure do |config|
+  # Enable both should and expect syntax during transition
+  config.expect_with :rspec do |expectations|
+    expectations.include_chain_clauses_in_custom_matcher_descriptions = true
+    expectations.syntax = [:should, :expect]
+  end
+
+  config.mock_with :rspec do |mocks|
+    mocks.verify_partial_doubles = true
+    mocks.syntax = [:should, :expect]
+  end
+
+  config.shared_context_metadata_behavior = :apply_to_host_groups
+end
 
 # load runtime dependencies
 Piggly::Parser.parser

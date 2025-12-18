@@ -1,4 +1,4 @@
-# encoding: ascii-8bit
+# encoding: utf-8
 
 module Piggly
   module Compiler
@@ -19,14 +19,14 @@ module Piggly
     #
     class CacheDir
       # Non-printable ASCII char indicates data should be Marshal'd
-      HINT = /[\000-\010\016-\037\177-\300]/
+      HINT = /[\u{0000}-\u{0008}\u{000E}-\u{001F}\u{007F}-\u{00C0}]/
 
       def initialize(dir)
         @dir  = dir
         @data = Hash.new do |h, k|
           path = File.join(@dir, k.to_s)
-          if File.exists?(path)
-            h[k.to_s] = File.open(path, "rb") do |io|
+          if File.exist?(path)
+            h[k.to_s] = File.open(path, "rb:UTF-8") do |io|
               # Detect Marshal'd data
               if io.read(2) !~ HINT
                 io.rewind
@@ -63,7 +63,7 @@ module Piggly
       # @return [void]
       def delete(key)
         path = File.join(@dir, key.to_s)
-        File.unlink(path) if File.exists?(path)
+        File.unlink(path) if File.exist?(path)
         @data.delete(key)
       end
 
@@ -77,7 +77,7 @@ module Piggly
       def clear
         @data.clear
 
-        if File.exists?(@dir)
+        if File.exist?(@dir)
           FileUtils.rm(Dir["#{@dir}/*"])
           FileUtils.touch(@dir)
         else
@@ -99,11 +99,11 @@ module Piggly
       # Serializes each entry to disk
       #   @return [void]
       def write(hash)
-        FileUtils.mkdir(@dir) unless File.exists?(@dir)
+        FileUtils.mkdir(@dir) unless File.exist?(@dir)
         FileUtils.touch(@dir) # Update mtime
 
         hash.each do |key, value|
-          File.open(File.join(@dir, key.to_s), "wb") do |io|
+          File.open(File.join(@dir, key.to_s), "wb:UTF-8") do |io|
             # Marshal if the first two bytes contain non-ASCII
             if value.is_a?(String) and value[0,2] !~ HINT
               io.write(value)

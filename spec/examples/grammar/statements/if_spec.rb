@@ -8,8 +8,8 @@ module Piggly
     describe "if statements" do
       describe "if .. then .. end if" do
         it "must end with a semicolon" do
-          lambda{ parse(:statement, 'IF cond THEN a := 10; END IF') }.should raise_error
-          lambda{ parse_some(:stmtIf, 'IF cond THEN a := 10; END IF') }.should raise_error
+          expect{ parse(:statement, 'IF cond THEN a := 10; END IF') }.to raise_error(Piggly::Parser::Failure)
+          expect{ parse_some(:stmtIf, 'IF cond THEN a := 10; END IF') }.to raise_error(Piggly::Parser::Failure)
         end
 
         it "parses successfully" do

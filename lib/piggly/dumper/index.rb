@@ -102,10 +102,10 @@ module Piggly
       # Load the index from disk
       def load_index
         contents =
-          unless File.exists?(path)
+          unless File.exist?(path)
             []
           else
-            YAML.load(File.read(path))
+            YAML.unsafe_load(File.read(path, encoding: 'UTF-8'))
           end
 
         Util::Enumerable.index_by(contents){|x| x.identifier }
@@ -113,7 +113,7 @@ module Piggly
 
       # Write the index to disk
       def store_index
-        File.open(path, "wb"){|io| YAML.dump(procedures.map{|p| p.skeleton }, io) }
+        File.open(path, "wb:UTF-8"){|io| YAML.dump(procedures.map{|p| p.skeleton }, io) }
       end
 
     end

@@ -1,0 +1,39 @@
+FROM ruby:3.4-alpine AS builder
+
+# Install build dependencies
+RUN apk add --no-cache \
+    build-base \
+    postgresql-dev \
+    git
+
+# Set working directory
+WORKDIR /app
+
+# Copy gemspec and version file first for better caching
+COPY piggly.gemspec /app/
+COPY lib/piggly/version.rb /app/lib/piggly/
+
+# Copy Gemfile
+COPY Gemfile /app/
+
+# Install bundler and dependencies
+RUN gem install bundler:2.3.26 && \
+    bundle install --jobs=4 --retry=3
+
+# Copy the rest of the application
+COPY . /app/
+
+# Build the gem
+RUN gem build piggly.gemspec
+
+# Create output directory
+RUN mkdir -p /output && \
+    cp *.gem /output/
+
+# Final stage - minimal image with just the gem
+FROM scratch AS export
+COPY --from=builder /output/*.gem /
+
+# Usage:
+# docker build -f Dockerfile.build --target=export --output=./builds .
+

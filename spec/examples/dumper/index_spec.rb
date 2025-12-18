@@ -5,7 +5,7 @@ module Piggly
   describe Dumper::Index do
     before do
       # make sure not to create directories all over the file system during the test
-      Config.stub(:mkpath).and_return{|root, file| File.join(root, file) }
+      allow(Config).to receive(:mkpath) { |root, file| File.join(root, file) }
 
       @config = Config.new
       @index  = Dumper::Index.new(@config)
@@ -13,20 +13,20 @@ module Piggly
 
     context "when cache file doesn't exist" do
       it "is empty" do
-        File.should_receive(:exists?).with(@index.path).and_return(false)
-        @index.procedures.should be_empty
+        expect(File).to receive(:exist?).with(@index.path).and_return(false)
+        expect(@index.procedures).to be_empty
       end
     end
 
     context "when cache file exists" do
       before do
-        File.stub(:exists?).with(@index.path).and_return(true)
+        allow(File).to receive(:exist?).with(@index.path).and_return(true)
       end
 
       context "when the cache index file is empty" do
         it "is empty" do
-          File.should_receive(:read).with(@index.path).and_return([].to_yaml)
-          @index.procedures.should be_empty
+          allow(File).to receive(:read).and_return([].to_yaml)
+          expect(@index.procedures).to be_empty
         end
       end
 
@@ -42,28 +42,30 @@ module Piggly
             "name"   => "login",
             "source" => "SECOND PROCEDURE SOURCE CODE"
 
-          File.stub(:read).with(@first.source_path(@config)).
-            and_return(@first.source(@config))
-
-          File.stub(:read).with(@second.source_path(@config)).
-            and_return(@second.source(@config))
-
-          File.stub(:read).with(@index.path).
-            and_return(YAML.dump([@first, @second]))
+          allow(File).to receive(:read) do |path, *args|
+            case path
+            when @first.source_path(@config)
+              @first.source(@config)
+            when @second.source_path(@config)
+              @second.source(@config)
+            when @index.path
+              YAML.dump([@first, @second])
+            end
+          end
         end
 
         it "has two procedures" do
-          @index.procedures.should have(2).things
+          expect(@index.procedures.size).to eq(2)
         end
 
         it "is indexed by identifier" do
-          @index[@first.identifier].identifier.should == @first.identifier
-          @index[@second.identifier].identifier.should == @second.identifier
+          expect(@index[@first.identifier].identifier).to eq(@first.identifier)
+          expect(@index[@second.identifier].identifier).to eq(@second.identifier)
         end
 
         it "reads each procedure's source_path" do
-          @index[@first.identifier].source(@config).should == @first.source(@config)
-          @index[@second.identifier].source(@config).should == @second.source(@config)
+          expect(@index[@first.identifier].source(@config)).to eq(@first.source(@config))
+          expect(@index[@second.identifier].source(@config)).to eq(@second.source(@config))
         end
 
         context "when the procedures used to be identified using another method" do
@@ -88,7 +90,7 @@ module Piggly
       end
 
       before do
-        @procedure = mock(:oid  => 1,
+        @procedure = double(:oid  => 1,
                           :name => q("public", "foo"),
                           :type => q("private", "int"),
                           :arg_modes => ["in", "in"],
@@ -99,9 +101,9 @@ module Piggly
       context "when name is unique" do
         context "and there is only one schema" do
           before do
-            @index.stub(:procedures =>
+            allow(@index).to receive(:procedures).and_return(
               [ @procedure,
-                mock(:oid  => 2,
+                double(:oid  => 2,
                      :name => q("public", "bar"),
                      :type => q("private", "int"),
                      :arg_modes => ["in"],
@@ -110,15 +112,15 @@ module Piggly
           end
 
           it "specifies schema.name" do
-            @index.label(@procedure).should == "foo"
+            expect(@index.label(@procedure)).to eq("foo")
           end
         end
 
         context "and there is more than one schema" do
           before do
-            @index.stub(:procedures =>
+            allow(@index).to receive(:procedures).and_return(
               [ @procedure,
-                mock(:oid  => 2,
+                double(:oid  => 2,
                      :name => q("schema", "foo"),
                      :type => q("private", "int"),
                      :arg_modes => ["in"],
@@ -127,7 +129,7 @@ module Piggly
           end
 
           it "specifies schema.name" do
-            @index.label(@procedure).should == "public.foo"
+            expect(@index.label(@procedure)).to eq("public.foo")
           end
         end
       end
@@ -135,9 +137,9 @@ module Piggly
       context "when name is not unique" do
         context "and schema.name is unique" do
           before do
-            @index.stub(:procedures =>
+            allow(@index).to receive(:procedures).and_return(
               [ @procedure,
-                mock(:oid  => 2,
+                double(:oid  => 2,
                      :name => q("schema", "foo"),
                      :type => q("private", "int"),
                      :arg_modes => ["in"],
@@ -146,16 +148,16 @@ module Piggly
           end
 
           it "specifies schema.name" do
-            @index.label(@procedure).should == "public.foo"
+            expect(@index.label(@procedure)).to eq("public.foo")
           end
         end
 
         context "and schema.name is not unique" do
           context "but argument types are unique" do
             before do
-              @index.stub(:procedures =>
+              allow(@index).to receive(:procedures).and_return(
                 [ @procedure,
-                  mock(:oid  => 2,
+                  double(:oid  => 2,
                        :name => q("public", "foo"),
                        :type => q("private", "int"),
                        :arg_modes => ["in"],
@@ -164,17 +166,17 @@ module Piggly
             end
 
             it "specifies schema.name(types)" do
-              @index.label(@procedure).should ==
-                "foo(private.int, private.varchar)"
+              expect(@index.label(@procedure)).to eq(
+                "foo(private.int, private.varchar)")
             end
           end
 
           context "and argument types are not unique" do
             context "but argument modes are unique" do
               before do
-                @index.stub(:procedures =>
+                allow(@index).to receive(:procedures).and_return(
                   [ @procedure,
-                    mock(:oid  => 2,
+                    double(:oid  => 2,
                          :name => q("public", "foo"),
                          :type => q("private", "int"),
                          :arg_modes => ["out", "out"],
@@ -183,8 +185,8 @@ module Piggly
               end
 
               it "specifies schema.name(types and modes)" do
-                @index.label(@procedure).should ==
-                  "foo(in private.int, in private.varchar)"
+                expect(@index.label(@procedure)).to eq(
+                  "foo(in private.int, in private.varchar)")
               end
             end
           end

@@ -1,3 +1,9 @@
 *.swp
 pkg/*
+builds/*
 example/piggly
+coverage/
+.bundle/
+vendor/bundle/
+*.gem
+piggly/*

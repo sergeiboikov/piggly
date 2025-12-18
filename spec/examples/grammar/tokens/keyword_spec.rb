@@ -13,13 +13,13 @@ module Piggly
 
       it "cannot have trailing characters" do
         GrammarHelper::KEYWORDS.each do |k|
-          lambda{ parse(:keyword, "#{k}abc") }.should raise_error
+          expect{ parse(:keyword, "#{k}abc") }.to raise_error(Piggly::Parser::Failure)
         end
       end
 
       it "cannot have preceeding characters" do
         GrammarHelper::KEYWORDS.each do |k|
-          lambda{ parse(:keyword, "abc#{k}") }.should raise_error
+          expect{ parse(:keyword, "#{k}abc") }.to raise_error(Piggly::Parser::Failure)
         end
       end
 

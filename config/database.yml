@@ -1,0 +1,7 @@
+piggly:
+  adapter: postgresql
+  database: gilded_rose
+  username: postgres
+  password: postgres
+  host: localhost
+  port: 5434

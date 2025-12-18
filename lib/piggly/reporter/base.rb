@@ -33,7 +33,7 @@ module Piggly
 
       def aggregate(label, summary)
         tag :p, label, :class => "summary"
-        tag :table, :class => "summary sortable" do
+        tag :table, :class => "summary" do
           tag :tr do
             tag :th, "Blocks"
             tag :th, "Loops"
@@ -46,12 +46,12 @@ module Piggly
           tag :tr, :class => "even" do
             unless summary.include?(:block) or summary.include?(:loop) or summary.include?(:branch)
               # Parser couldn't parse this file
-              tag(:td, :class => "count") { tag :span, -1, :style => "display:none" }
-              tag(:td, :class => "count") { tag :span, -1, :style => "display:none" }
-              tag(:td, :class => "count") { tag :span, -1, :style => "display:none" }
-              tag(:td, :class => "pct")   { tag :span, -1, :style => "display:none" }
-              tag(:td, :class => "pct")   { tag :span, -1, :style => "display:none" }
-              tag(:td, :class => "pct")   { tag :span, -1, :style => "display:none" }
+              tag(:td, :class => "count") { tag :span, -1 }
+              tag(:td, :class => "count") { tag :span, -1 }
+              tag(:td, :class => "count") { tag :span, -1 }
+              tag(:td, :class => "pct")   { tag :span, -1 }
+              tag(:td, :class => "pct")   { tag :span, -1 }
+              tag(:td, :class => "pct")   { tag :span, -1 }
             else
               tag(:td, (summary[:block][:count]  || 0), :class => "count")
               tag(:td, (summary[:loop][:count]   || 0), :class => "count")
@@ -72,17 +72,20 @@ module Piggly
 
               style =
                 case pct.to_f
-                when 0...50;  "low"
-                when 0...100; "mid"
-                else          "high"
+                when 0;      "zero"
+                when 0...30; "low"
+                when 0...60; "mid"
+                when 0...99; "high"
+                else         "full"
                 end
 
               tag :td, :class => "graph" do
                 if pct
                   tag :table, :align => "right", :class => "graph #{style}" do
                     tag :tr do
-                      tag :td, :class => "covered", :width => (pct/2.0).to_i
-                      tag :td, :class => "uncovered", :width => ((100-pct)/2.0).to_i
+                      covered_width = (pct/2.0).round
+                      tag :td, :class => "covered", :width => covered_width
+                      tag :td, :class => "uncovered", :width => (50 - covered_width)
                     end
                   end
                 end

@@ -46,9 +46,10 @@ module Piggly
                   toc(@profile[procedure])
                 end
 
+                tag :a, "Return to index", :href => "index.html", :class => "return"
+
                 timestamp
 
-                tag :a, "Return to index", :href => "index.html", :class => "return"
               end
             end
           end
@@ -60,7 +61,8 @@ module Piggly
     private
 
       def signature(procedure)
-        string = "<span class='tK'>CREATE FUNCTION</span> <b><span class='tI'>#{procedure.name}</span></b>"
+        keyword = procedure.prokind == "p" ? "procedure" : "function"
+        string = "<span class='tK'>create function</span> <b><span class='tI'>#{procedure.name}</span></b>"
 
         if procedure.arg_names.size <= 1
           string   << " ( "
@@ -73,29 +75,33 @@ module Piggly
         end
 
         arguments = procedure.arg_types.zip(procedure.arg_modes, procedure.arg_names).map do |atype, amode, aname|
-          amode &&= "<span class='tK'>#{amode.upcase}</span>#{spacer}"
+          amode &&= "<span class='tK'>#{amode.downcase}</span>#{spacer}"
           aname &&= "<span class='tI'>#{aname}</span>#{spacer}"
           "#{amode}#{aname}<span class='tD'>#{atype}</span>"
         end.join(separator)
 
         string << arguments << " )"
-        string << "\n<span class='tK'>RETURNS#{procedure.setof ? ' SETOF' : ''}</span>"
 
-        if procedure.type.table?
-          fields = procedure.type.types.zip(procedure.type.names).map do |rtype, rname|
-            rname = "<span class='tI'>#{rname}</span>\t"
-            rtype = "<span class='tD'>#{rtype}</span>"
-            "#{rname}#{rtype}"
-          end.join(",\n\t")
+        if procedure.prokind != "p"
+          string << "\n<span class='tK'>returns#{procedure.setof ? ' setof' : ''}</span>"
 
-          string << " <span class='tK'>TABLE</span> (\n\t" << fields << " )"
-        else
-          string << " <span class='tD'>#{procedure.type.shorten}</span>"
+          if procedure.type.table?
+            fields = procedure.type.types.zip(procedure.type.names).map do |rtype, rname|
+              rname = "<span class='tI'>#{rname}</span>\t"
+              rtype = "<span class='tD'>#{rtype}</span>"
+              "#{rname}#{rtype}"
+            end.join(",\n\t")
+
+            string << " <span class='tK'>table</span> (\n\t" << fields << " )"
+          else
+            string << " <span class='tD'>#{procedure.type.shorten}</span>"
+          end
         end
 
-        string << "\n  <span class='tK'>SECURITY DEFINER</span>" if procedure.secdef
-        string << "\n  <span class='tK'>STRICT</span>" if procedure.strict
-        string << "\n  <span class='tK'>#{procedure.volatility.upcase}</span>"
+        string << "\n  <span class='tK'>language #{procedure.language}</span>"
+        string << "\n  <span class='tK'>security definer</span>" if procedure.secdef
+        string << "\n  <span class='tK'>strict</span>" if procedure.strict
+        string << "\n  <span class='tK'>#{procedure.volatility.downcase}</span>" if procedure.prokind != "p"
 
         string
       end
