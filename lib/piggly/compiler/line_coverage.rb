@@ -83,8 +83,10 @@ module Piggly
             start_line, end_line = node_line_range(node, source)
             
             # Record coverage for each line spanned by this node
+            # Skip lines containing only structural keywords (begin, end, declare, etc.)
             if start_line && end_line && start_line > 0 && end_line >= start_line
               (start_line..end_line).each do |line|
+                next if excluded_line?(source, line)
                 record_line_coverage(coverage, line, tag)
               end
             end
@@ -101,6 +103,29 @@ module Piggly
         end
         
         coverage
+      end
+
+      # Check if a source line should be excluded from coverage
+      # Lines containing only structural keywords are not executable
+      # @param source [String] full source code
+      # @param line_number [Integer] 1-based line number
+      # @return [Boolean] true if line should be excluded
+      def excluded_line?(source, line_number)
+        lines = source.split("\n")
+        return true if line_number < 1 || line_number > lines.length
+        
+        line_content = lines[line_number - 1].strip.downcase
+        
+        # Exclude lines containing only structural keywords
+        excluded_patterns = [
+          /\A\s*end\s*;\s*\z/i,           # end;
+          /\A\s*begin\s*\z/i,             # begin
+          /\A\s*declare\s*\z/i,           # declare
+          /\A\s*\$\$\s*\z/,               # $$ (dollar quoting)
+          /\A\s*\z/                       # empty lines
+        ]
+        
+        excluded_patterns.any? { |pattern| line_content =~ pattern }
       end
 
       # Calculate the line range for a node
