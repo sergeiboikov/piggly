@@ -31,13 +31,15 @@ module Piggly
 
     private
 
-      def aggregate(label, summary)
+      def aggregate(label, summary, line_summary = nil)
         tag :p, label, :class => "summary"
         tag :table, :class => "summary" do
           tag :tr do
+            tag :th, "Lines"
             tag :th, "Blocks"
             tag :th, "Loops"
             tag :th, "Branches"
+            tag :th, "Line Coverage"
             tag :th, "Block Coverage"
             tag :th, "Loop Coverage"
             tag :th, "Branch Coverage"
@@ -49,13 +51,27 @@ module Piggly
               tag(:td, :class => "count") { tag :span, -1 }
               tag(:td, :class => "count") { tag :span, -1 }
               tag(:td, :class => "count") { tag :span, -1 }
+              tag(:td, :class => "count") { tag :span, -1 }
+              tag(:td, :class => "pct")   { tag :span, -1 }
               tag(:td, :class => "pct")   { tag :span, -1 }
               tag(:td, :class => "pct")   { tag :span, -1 }
               tag(:td, :class => "pct")   { tag :span, -1 }
             else
+              # Line coverage (from LineCoverage module)
+              if line_summary
+                tag(:td, (line_summary[:count] || 0), :class => "count")
+              else
+                tag(:td, :class => "count") { tag :span, -1 }
+              end
               tag(:td, (summary[:block][:count]  || 0), :class => "count")
               tag(:td, (summary[:loop][:count]   || 0), :class => "count")
               tag(:td, (summary[:branch][:count] || 0), :class => "count")
+              # Line coverage percentage
+              if line_summary
+                tag(:td, :class => "pct") { percent(line_summary[:percent]) }
+              else
+                tag(:td, :class => "pct") { tag :span, -1 }
+              end
               tag(:td, :class => "pct") { percent(summary[:block][:percent])  }
               tag(:td, :class => "pct") { percent(summary[:loop][:percent])   }
               tag(:td, :class => "pct") { percent(summary[:branch][:percent]) }

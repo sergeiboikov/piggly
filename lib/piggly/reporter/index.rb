@@ -5,10 +5,15 @@ module Piggly
 
       def initialize(config, profile)
         @config, @profile = config, profile
+        @line_coverage = Compiler::LineCoverage.new(config)
       end
 
       def report(procedures, index)
         io = File.open("#{report_path}/index.html", "w")
+
+        # Calculate line coverage for all procedures
+        all_line_coverage = calculate_all_line_coverage(procedures)
+        overall_line_summary = @line_coverage.summary(all_line_coverage)
 
         html(io) do
           tag :html do
@@ -20,7 +25,7 @@ module Piggly
             end
 
             tag :body do
-              aggregate("PL/pgSQL Coverage Summary", @profile.summary)
+              aggregate("PL/pgSQL Coverage Summary", @profile.summary, overall_line_summary)
               table(procedures.sort_by{|p| index.label(p) }, index)
               timestamp
             end
@@ -32,14 +37,38 @@ module Piggly
 
     private
 
+      # Calculate combined line coverage summary for all procedures
+      # Returns aggregated coverage data that can be passed to @line_coverage.summary()
+      def calculate_all_line_coverage(procedures)
+        all_coverage = {}
+        next_key = 1  # Use sequential keys to avoid collisions
+        
+        procedures.each do |procedure|
+          begin
+            coverage = @line_coverage.calculate(procedure, @profile)
+            # Add each line's coverage data with a unique key
+            # Keys don't need to represent actual line numbers for summary calculation
+            coverage.each do |_line, data|
+              all_coverage[next_key] = data
+              next_key += 1
+            end
+          rescue => e
+            # Skip procedures that can't be parsed
+          end
+        end
+        all_coverage
+      end
+
       def table(procedures, index)
         tag :div, :class => "table-wrapper" do
           tag :table, :class => "summary sortable" do
             tag :tr do
               tag :th, "Procedure"
+              tag :th, "Lines"
               tag :th, "Blocks"
               tag :th, "Loops"
               tag :th, "Branches"
+              tag :th, "Line Coverage"
               tag :th, "Block Coverage"
               tag :th, "Loop Coverage"
               tag :th, "Branch Coverage"
@@ -50,6 +79,15 @@ module Piggly
               row     = k.modulo(2) == 0 ? "even" : "odd"
               label   = index.label(procedure)
 
+              # Calculate line coverage for this procedure
+              line_summary = nil
+              begin
+                coverage = @line_coverage.calculate(procedure, @profile)
+                line_summary = @line_coverage.summary(coverage)
+              rescue => e
+                # Skip if can't calculate
+              end
+
               tag :tr, :class => row do
                 unless summary.include?(:block) or summary.include?(:loop) or summary.include?(:branch)
                   # Parser couldn't parse this file
@@ -57,14 +95,18 @@ module Piggly
                   tag(:td, :class => "count") { tag :span, -1 }
                   tag(:td, :class => "count") { tag :span, -1 }
                   tag(:td, :class => "count") { tag :span, -1 }
+                  tag(:td, :class => "count") { tag :span, -1 }
+                  tag(:td, :class => "pct") { tag :span, -1 }
                   tag(:td, :class => "pct") { tag :span, -1 }
                   tag(:td, :class => "pct") { tag :span, -1 }
                   tag(:td, :class => "pct") { tag :span, -1 }
                 else
                   tag(:td, :class => "file") { tag :a, label, :href => procedure.identifier + ".html" }
+                  tag :td, (line_summary ? line_summary[:count] : 0), :class => "count"
                   tag :td, (summary[:block][:count]  || 0), :class => "count"
                   tag :td, (summary[:loop][:count]   || 0), :class => "count"
                   tag :td, (summary[:branch][:count] || 0), :class => "count"
+                  tag(:td, :class => "pct") { percent(line_summary ? line_summary[:percent] : nil) }
                   tag(:td, :class => "pct") { percent(summary[:block][:percent])  }
                   tag(:td, :class => "pct") { percent(summary[:loop][:percent])   }
                   tag(:td, :class => "pct") { percent(summary[:branch][:percent]) }

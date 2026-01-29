@@ -5,6 +5,7 @@ module Piggly
 
       def initialize(config, profile)
         @config, @profile = config, profile
+        @line_coverage = Compiler::LineCoverage.new(config)
       end
 
       def report(procedure)
@@ -13,6 +14,15 @@ module Piggly
         begin
           compiler = Compiler::CoverageReport.new(@config)
           data     = compiler.compile(procedure, @profile)
+
+          # Calculate line coverage for this procedure
+          line_summary = nil
+          begin
+            coverage = @line_coverage.calculate(procedure, @profile)
+            line_summary = @line_coverage.summary(coverage)
+          rescue => e
+            # Skip if can't calculate
+          end
 
           html(io) do
             tag :html, :xmlns => "http://www.w3.org/1999/xhtml" do
@@ -25,7 +35,7 @@ module Piggly
 
               tag :body do
                 tag :div, :class => "header" do
-                  aggregate(procedure.name, @profile.summary(procedure))
+                  aggregate(procedure.name, @profile.summary(procedure), line_summary)
                 end
 
                 tag :div, :class => "container" do

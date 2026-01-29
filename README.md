@@ -51,6 +51,9 @@ these events and generates prettified source code that is annotated with coverag
 This fork continues the version numbering from the original piggly project:
 - **2.3.1** - Last version of original piggly by Kyle Putnam
 - **2.3.2** - NSD fork with UTF-8 encoding support and updated dependencies
+- **2.3.3** - Added SonarQube integration and line coverage metrics:
+  - New `--sonar-report-path PATH` option to generate SonarQube generic coverage XML
+  - Added LINES and LINE COVERAGE columns to HTML reports
 
 ## How to Install
 
@@ -122,10 +125,18 @@ might run:
     etc.
 
 To build the coverage report, have piggly read that file in by executing `piggly report < messages.txt`,
- or `piggly report -f messages.txt`. You don't actually need the intermediate file, you can pipe your
+or `piggly report -f messages.txt`. You don't actually need the intermediate file, you can pipe your
 test suite directly in like `ant test 2>&1 | piggly report`.
 
 Once the report is built you can open it in `piggly/reports/index.html`.
+
+### SonarQube Integration
+
+To generate a SonarQube-compatible coverage report, use the `--sonar-report-path` option:
+
+    $ piggly report -f messages.txt --sonar-report-path coverage/sonar-coverage.xml
+
+This generates an XML file in SonarQube's [generic test coverage format](https://docs.sonarsource.com/sonarqube-server/latest/analyzing-source-code/test-coverage/generic-test-data/).
 
 ## Running the Examples
 

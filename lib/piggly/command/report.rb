@@ -13,7 +13,7 @@ module Piggly
     class << Report
       def main(argv)
         require "pp"
-        io, config = configure(argv)
+        io, config, sonar_path = configure(argv)
 
         profile = Profile.new
         index   = Dumper::Index.new(config)
@@ -39,6 +39,11 @@ module Piggly
 
         create_index(config, index, procedures, profile)
         create_reports(config, procedures, profile)
+        
+        # Generate Sonar coverage report if requested
+        if sonar_path
+          create_sonar_report(config, procedures, profile, sonar_path)
+        end
       end
 
       # Adds the given procedures to Profile
@@ -118,8 +123,18 @@ module Piggly
         queue.execute
       end
 
+      # Create Sonar coverage XML report
+      #
+      def create_sonar_report(config, procedures, profile, output_path)
+        puts "creating Sonar coverage report"
+        reporter = Reporter::Sonar.new(config, profile, output_path)
+        path = reporter.report(procedures)
+        puts "Sonar coverage report written to: #{path}"
+      end
+
       def configure(argv, config = Config.new)
         io = $stdin
+        sonar_path = nil
         p  = OptionParser.new do |o|
           o.on("-t", "--dry-run",           "only print the names of matching procedures", &o_dry_run(config))
           o.on("-s", "--select PATTERN",    "select procedures matching PATTERN", &o_select(config))
@@ -136,6 +151,9 @@ module Piggly
                    File.open(path, "rb")
                  end
           end
+          o.on("--sonar-report-path PATH",  "generate Sonar coverage XML report at PATH") do |path|
+            sonar_path = path
+          end
         end
 
         begin
@@ -146,7 +164,7 @@ module Piggly
               "stdin must be a pipe, or use --input PATH"
           end
 
-          return io, config
+          return io, config, sonar_path
         rescue OptionParser::InvalidOption,
                OptionParser::InvalidArgument,
                OptionParser::MissingArgument
