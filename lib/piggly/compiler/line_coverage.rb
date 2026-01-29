@@ -13,7 +13,7 @@ module Piggly
       # Calculate line coverage for a procedure
       # @param procedure [Dumper::ReifiedProcedure, Dumper::SkeletonProcedure]
       # @param profile [Profile]
-      # @return [Hash] { line_number => { covered: bool, branches_to_cover: int, covered_branches: int } }
+      # @return [Hash] { line_number => { covered: bool } }
       def calculate(procedure, profile)
         Parser.parser
         
@@ -48,24 +48,6 @@ module Piggly
         }
       end
 
-      # Calculate branch coverage summary from coverage data
-      # @param coverage [Hash] line coverage data from calculate()
-      # @return [Hash] { branches_to_cover: Integer, covered_branches: Integer, percent: Float }
-      def branch_summary(coverage)
-        total_branches = 0
-        covered_branches = 0
-        
-        coverage.each do |_, line_data|
-          total_branches += line_data[:branches_to_cover] || 0
-          covered_branches += line_data[:covered_branches] || 0
-        end
-        
-        {
-          branches_to_cover: total_branches,
-          covered_branches: covered_branches,
-          percent: total_branches > 0 ? (covered_branches.to_f / total_branches * 100) : nil
-        }
-      end
 
     protected
 
@@ -169,9 +151,7 @@ module Piggly
       def record_line_coverage(coverage, line, tag)
         coverage[line] ||= {
           covered: nil,           # nil = no block/loop tags yet, will be determined by branches if any
-          has_block_or_loop: false,
-          branches_to_cover: 0,
-          covered_branches: 0
+          has_block_or_loop: false
         }
         
         case tag.type
@@ -186,29 +166,17 @@ module Piggly
           end
           
         when :branch
-          # Branch tags contribute to branch coverage metrics
-          if tag.is_a?(Tags::ConditionalBranchTag)
-            # Conditional branches have true/false paths
-            coverage[line][:branches_to_cover] += 2
-            coverage[line][:covered_branches] += (tag.true ? 1 : 0) + (tag.false ? 1 : 0)
-            
-            # For lines with only branches, mark as covered if at least one branch was taken
-            unless coverage[line][:has_block_or_loop]
+          # For lines with only branches, mark as covered if at least one branch was taken
+          unless coverage[line][:has_block_or_loop]
+            if tag.is_a?(Tags::ConditionalBranchTag)
               branch_taken = tag.true || tag.false
               if coverage[line][:covered].nil?
                 coverage[line][:covered] = branch_taken
               else
-                # Multiple branches: covered if ANY branch was taken (OR logic for branch-only lines)
                 coverage[line][:covered] = coverage[line][:covered] || branch_taken
               end
-            end
-          else
-            # Unconditional branches (return, exit, etc.)
-            coverage[line][:branches_to_cover] += 1
-            coverage[line][:covered_branches] += tag.complete? ? 1 : 0
-            
-            # For lines with only branches, mark as covered if this branch was executed
-            unless coverage[line][:has_block_or_loop]
+            else
+              # Unconditional branches (return, exit, etc.)
               if coverage[line][:covered].nil?
                 coverage[line][:covered] = tag.complete?
               else

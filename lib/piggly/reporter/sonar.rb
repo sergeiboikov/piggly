@@ -3,8 +3,6 @@ module Piggly
 
     #
     # Generates SonarQube generic test coverage XML format.
-    # Uses the same LineCoverage module as the HTML reporter to ensure
-    # consistent metrics between Piggly HTML and Sonar reports.
     #
     # Format specification:
     # https://docs.sonarsource.com/sonarqube-server/latest/analyzing-source-code/test-coverage/generic-test-data/
@@ -68,12 +66,6 @@ module Piggly
         attrs = []
         attrs << "lineNumber=\"#{line_number}\""
         attrs << "covered=\"#{line_data[:covered]}\""
-        
-        # Add branch coverage attributes if there are branches on this line
-        if line_data[:branches_to_cover] && line_data[:branches_to_cover] > 0
-          attrs << "branchesToCover=\"#{line_data[:branches_to_cover]}\""
-          attrs << "coveredBranches=\"#{line_data[:covered_branches]}\""
-        end
         
         io.puts "    <lineToCover #{attrs.join(' ')}/>"
       end
