@@ -15,15 +15,21 @@ module Piggly
       # @param profile [Profile]
       # @return [Hash] { line_number => { covered: bool, branches_to_cover: int, covered_branches: int } }
       def calculate(procedure, profile)
+        Parser.parser
+        
         compiler = TraceCompiler.new(@config)
         
-        return {} if compiler.stale?(procedure)
-        
+        # Let compile() handle staleness - it will recompile if needed
         data = compiler.compile(procedure)
+        
+        # Return empty if compilation failed (tree is nil)
+        tree = data[:tree]
+        return {} if tree.nil?
+        
         source = procedure.source(@config)
         
         coverage = {}
-        traverse(data[:tree], profile, source, coverage)
+        traverse(tree, profile, source, coverage)
         coverage
       end
 
@@ -73,18 +79,19 @@ module Piggly
           begin
             tag = profile[node.tag_id]
             
-            # Calculate line range from node's character interval
-            start_pos = node.interval.first
-            end_pos = node.interval.end
-            start_line = source[0...start_pos].count("\n") + 1
-            end_line = source[0...end_pos].count("\n") + 1
+            # Get line numbers for this node
+            start_line, end_line = node_line_range(node, source)
             
             # Record coverage for each line spanned by this node
-            (start_line..end_line).each do |line|
-              record_line_coverage(coverage, line, tag)
+            if start_line && end_line && start_line > 0 && end_line >= start_line
+              (start_line..end_line).each do |line|
+                record_line_coverage(coverage, line, tag)
+              end
             end
+          rescue RuntimeError => e
+            # Skip nodes where tag lookup fails (expected for some nodes)
           rescue => e
-            # Skip nodes where tag lookup fails
+            # Skip nodes with unexpected errors
           end
         end
         
@@ -94,6 +101,40 @@ module Piggly
         end
         
         coverage
+      end
+
+      # Calculate the line range for a node
+      # @param node [NodeClass] parse tree node
+      # @param source [String] source code text
+      # @return [Array<Integer, Integer>] start_line and end_line, or [nil, nil] if unable to calculate
+      def node_line_range(node, source)
+        return [nil, nil] unless node.respond_to?(:interval)
+        return [nil, nil] unless source.is_a?(String) && !source.empty?
+        
+        interval = node.interval
+        return [nil, nil] unless interval.is_a?(Range)
+        
+        start_pos = interval.first.to_i
+        return [nil, nil] if start_pos < 0
+        
+        # Handle exclusive ranges (most common in Treetop)
+        if interval.exclude_end?
+          end_pos = [interval.end.to_i - 1, start_pos].max
+        else
+          end_pos = interval.end.to_i
+        end
+        
+        # Clamp to source bounds
+        source_len = source.length
+        start_pos = [start_pos, source_len - 1].min if source_len > 0
+        end_pos = [end_pos, source_len - 1].min if source_len > 0
+        
+        # Calculate line numbers by counting newlines
+        # Line numbers are 1-based
+        start_line = source[0...start_pos].count("\n") + 1
+        end_line = source[0..end_pos].count("\n") + 1
+        
+        [start_line, end_line]
       end
 
       # Record coverage data for a specific line
