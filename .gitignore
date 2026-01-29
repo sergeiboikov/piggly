@@ -7,3 +7,6 @@ coverage/
 vendor/bundle/
 *.gem
 piggly/*
+.env
+test.sh
+trace.txt
