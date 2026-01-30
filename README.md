@@ -132,9 +132,9 @@ Once the report is built you can open it in `piggly/reports/index.html`.
 
 ### SonarQube Integration
 
-To generate a SonarQube-compatible coverage report, use the `--sonar-report-path` option:
+To generate a SonarQube-compatible coverage report, use the `--sonar-report-path` (or `-x`) option:
 
-    $ piggly report -f messages.txt --sonar-report-path coverage/sonar-coverage.xml
+    $ piggly report -f messages.txt --sonar-report-path piggly/sonar/coverage.xml
 
 This generates an XML file in SonarQube's [generic test coverage format](https://docs.sonarsource.com/sonarqube-server/latest/analyzing-source-code/test-coverage/generic-test-data/).
 

@@ -47,10 +47,8 @@ module Piggly
         coverage = @line_coverage.calculate(procedure, @profile)
         return if coverage.empty?
         
-        # Build readable path as /<schema>/<function>.sql
-        schema = procedure.name.schema || "public"
-        func_name = procedure.name.name
-        source_path = "/#{schema}/#{func_name}.sql"
+        # Get the source file path relative to project root
+        source_path = procedure.source_path(@config)
         
         io.puts "  <file path=\"#{escape_xml(source_path)}\">"
         
