@@ -53,7 +53,7 @@ module Piggly
               next_key += 1
             end
           rescue => e
-            # Skip procedures that can't be parsed
+            $stderr.puts "Index: ERROR calculating coverage for #{procedure.name}: #{e.class}: #{e.message}"
           end
         end
         all_coverage

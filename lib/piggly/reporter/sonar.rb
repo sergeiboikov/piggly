@@ -47,8 +47,9 @@ module Piggly
         coverage = @line_coverage.calculate(procedure, @profile)
         return if coverage.empty?
         
-        # Get the source file path relative to project root
-        source_path = procedure.source_path(@config)
+        # Get the source file path and convert to relative path
+        absolute_path = procedure.source_path(@config)
+        source_path = make_relative_path(absolute_path)
         
         io.puts "  <file path=\"#{escape_xml(source_path)}\">"
         
@@ -78,6 +79,14 @@ module Piggly
           .gsub(">", "&gt;")
           .gsub("\"", "&quot;")
           .gsub("'", "&apos;")
+      end
+
+      # Convert absolute path to relative path from project root for cross-platform compatibility
+      def make_relative_path(absolute_path)
+        project_root = File.dirname(File.dirname(@config.cache_root))
+        
+        relative = absolute_path.sub(/^#{Regexp.escape(project_root)}[\/\\]?/, '')
+        relative.gsub('\\', '/')
       end
     end
 
