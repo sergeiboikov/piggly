@@ -104,7 +104,8 @@ module Piggly
           /\A\s*begin\s*\z/i,             # begin
           /\A\s*declare\s*\z/i,           # declare
           /\A\s*\$\$\s*\z/,               # $$ (dollar quoting)
-          /\A\s*\z/                       # empty lines
+          /\A\s*\z/,                      # empty lines
+          /\A\s*--\s*piggly_proc:/i       # synthetic footer comment with signature
         ]
         
         excluded_patterns.any? { |pattern| line_content =~ pattern }
