@@ -51,7 +51,8 @@ these events and generates prettified source code that is annotated with coverag
 This fork continues the version numbering from the original piggly project:
 - **2.3.1** - Last version of original piggly by Kyle Putnam
 - **2.3.2** - NSD fork with UTF-8 encoding support and updated dependencies
-- **2.3.3** - Added SonarQube integration and line coverage metrics:
+- **2.3.3** - Fixed issues
+- **2.3.4** - Added SonarQube integration and line coverage metrics:
   - New `--sonar-report-path PATH` option to generate SonarQube generic coverage XML
   - Added LINES and LINE COVERAGE columns to HTML reports
 
