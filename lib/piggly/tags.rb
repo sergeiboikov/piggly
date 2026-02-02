@@ -175,7 +175,7 @@ module Piggly
       end
 
       def style
-        "l#{[@pass, @once, @twice, @ends].map{|b| b ? 1 : 0}}"
+        "l#{[@pass, @once, @twice, @ends].map{|b| b ? 1 : 0}.join}"
       end
 
       def to_f

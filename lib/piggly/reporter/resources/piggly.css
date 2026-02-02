@@ -421,15 +421,15 @@ table.full td.covered {
   width: 100% !important;
 }
 
-/* SYNTAX HIGHLIGHTING - Modern color scheme */
-.tI { color: #475569; } /* identifier - slate-600 */
-.tD { color: #7c3aed; font-style: italic; } /* data type - violet-600 */
-.tK { color: #dc2626; font-weight: 500; } /* keyword - red-600 */
-.tC { color: #6366f1; font-style: italic; } /* comment - indigo-500 */
-.tQ { color: #059669; font-style: italic; } /* sql statement - emerald-600 */
-.tS { color: #10b981; } /* string literal - emerald-500 */
-.tL { color: #ea580c; font-style: italic; } /* label - orange-600 */
-.tM { color: var(--color-text-secondary); } /* dollar quote marker */
+/* SYNTAX HIGHLIGHTING - Inherit coverage colors, except comments */
+.tI { color: inherit; } /* identifier */
+.tD { color: inherit; font-style: italic; } /* data type */
+.tK { color: inherit; font-weight: 500; } /* keyword */
+.tC { color: var(--color-text); font-style: italic; } /* comment */
+.tQ { color: inherit; font-style: italic; } /* sql statement */
+.tS { color: inherit; } /* string literal */
+.tL { color: inherit; font-style: italic; } /* label */
+.tM { color: inherit; } /* dollar quote marker */
 
 /* CODE BLOCKS */
 .b {
@@ -460,18 +460,23 @@ table.full td.covered {
 }
 
 .c1 {
-  color: var(--color-text);
+  color: var(--color-success);
 }
 
 /* LOOP COVERAGE */
-.l0000, .l0001, .l0010, .l0100, .l0011, .l0101, .l0110, .l0111,
+.l0000 {
+  font-weight: 600;
+  color: var(--color-danger); /* red - never evaluated */
+}
+
+.l0001, .l0010, .l0100, .l0011, .l0101, .l0110, .l0111,
 .l1000, .l1001, .l1010, .l1100, .l1011, .l1101, .l1110 {
   font-weight: 600;
-  color: var(--color-warning);
+  color: var(--color-warning); /* orange - partial coverage */
 }
 
 .l1111 {
-  color: var(--color-text);
+  color: var(--color-success); /* green - full coverage */
 }
 
 /* BRANCH DECISIONS */
@@ -480,18 +485,14 @@ table.full td.covered {
   color: var(--color-danger);
 }
 
-.b01 {
-  font-weight: 600;
-  color: #10b981;
-}
-
+.b01,
 .b10 {
   font-weight: 600;
-  color: #f59e0b;
+  color: var(--color-warning);
 }
 
 .b11 {
-  color: var(--color-text);
+  color: var(--color-success);
 }
 
 /* SCROLLBAR STYLING (for webkit browsers) */
