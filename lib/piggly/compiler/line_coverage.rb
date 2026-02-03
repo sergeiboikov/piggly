@@ -87,7 +87,7 @@ module Piggly
       end
 
       # Check if a source line should be excluded from coverage
-      # Lines containing only structural keywords are not executable
+      # Lines containing only structural keywords or comments are not executable
       # @param source [String] full source code
       # @param line_number [Integer] 1-based line number
       # @return [Boolean] true if line should be excluded
@@ -97,14 +97,15 @@ module Piggly
         
         line_content = lines[line_number - 1].strip.downcase
         
-        # Exclude lines containing only structural keywords
+        # Exclude lines containing only structural keywords or comments
         excluded_patterns = [
           /\A\s*end\s*;\s*\z/i,           # end;
           /\A\s*begin\s*\z/i,             # begin
           /\A\s*declare\s*\z/i,           # declare
           /\A\s*\$\$\s*\z/,               # $$ (dollar quoting)
           /\A\s*\z/,                      # empty lines
-          /\A\s*--\s*piggly_proc:/i       # synthetic footer comment with signature
+          /\A\s*--/,                      # single-line comments (-- ...)
+          /\A\s*\/\*.*\*\/\s*\z/          # single-line block comments (/* ... */)
         ]
         
         excluded_patterns.any? { |pattern| line_content =~ pattern }
