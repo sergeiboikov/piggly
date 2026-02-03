@@ -3,7 +3,6 @@ module Piggly
 
     #
     # Calculates line-level coverage from tagged parse tree nodes.
-    # Used by both HTML and Sonar reporters to ensure consistent metrics.
     #
     class LineCoverage
       def initialize(config)
@@ -156,14 +155,23 @@ module Piggly
         }
         
         case tag.type
-        when :block, :loop
-          # Block and loop tags affect line coverage
-          # Line is covered only if ALL block/loop tags are complete
+        when :block
+          # Block tags affect line coverage - line is covered if block was executed
           coverage[line][:has_block_or_loop] = true
           if coverage[line][:covered].nil?
             coverage[line][:covered] = tag.complete?
           else
             coverage[line][:covered] = coverage[line][:covered] && tag.complete?
+          end
+          
+        when :loop
+          # A loop is covered if it was executed at least once (any iteration pattern)
+          coverage[line][:has_block_or_loop] = true
+          loop_executed = loop_was_executed?(tag)
+          if coverage[line][:covered].nil?
+            coverage[line][:covered] = loop_executed
+          else
+            coverage[line][:covered] = coverage[line][:covered] && loop_executed
           end
           
         when :branch
@@ -189,6 +197,14 @@ module Piggly
         
         # Ensure covered has a boolean value (default to false if still nil)
         coverage[line][:covered] = false if coverage[line][:covered].nil?
+      end
+
+      # Check if a loop tag indicates the loop was executed at least once
+      # For Sonar, partial loop coverage counts as covered
+      # @param tag [Tags::AbstractLoopTag] the loop tag
+      # @return [Boolean] true if loop was executed (any iteration pattern)
+      def loop_was_executed?(tag)
+        tag.pass || tag.once || tag.twice || tag.ends
       end
     end
 
