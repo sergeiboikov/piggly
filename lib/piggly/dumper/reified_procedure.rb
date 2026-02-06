@@ -26,7 +26,7 @@ module Piggly
 
       # @return [String]
       def source(config)
-        source_with_footer
+        @source
       end
 
       # @return [void]
@@ -37,9 +37,7 @@ module Piggly
                 "last coverage run. You must restore the source manually."
         end
 
-        File.open(source_path(config), "wb:UTF-8") do |io|
-          io.write(source_with_footer)
-        end
+        File.open(source_path(config), "wb:UTF-8"){|io| io.write(@source) }
       end
 
       # @return [SkeletonProcedure]
@@ -51,37 +49,6 @@ module Piggly
 
       def skeleton?
         false
-      end
-
-    private
-
-      # Build a single-line footer comment containing the procedure signature.
-      # Example:
-      #   -- PIGGLY_PROC: public.update_quality_procedure_in(in p_caller_id bigint)
-      def footer_comment
-        signature = "#{name}(#{arguments})"
-        "-- PIGGLY_PROC: #{signature}"
-      end
-
-      # Returns the source decorated with a footer comment.
-      def source_with_footer
-        return @source_with_footer if defined?(@source_with_footer) && @source_with_footer
-
-        body = @source.to_s
-
-        lines = body.split("\n", -1)
-        last_non_empty = lines.rindex { |l| !l.strip.empty? }
-
-        if last_non_empty && lines[last_non_empty].lstrip.start_with?("-- PIGGLY_PROC:")
-          # Footer already present, normalise to end with a single newline
-          decorated = lines.join("\n")
-          decorated << "\n" unless decorated.end_with?("\n")
-        else
-          stripped = body.rstrip
-          decorated = stripped + "\n" + footer_comment + "\n"
-        end
-
-        @source_with_footer = decorated
       end
     end
 
