@@ -5,5 +5,6 @@ module Piggly
     autoload :Index,      "piggly/reporter/index"
     autoload :Procedure,  "piggly/reporter/procedure"
     autoload :Sonar,      "piggly/reporter/sonar"
+    autoload :SchemaCsv,  "piggly/reporter/schema_csv"
   end
 end

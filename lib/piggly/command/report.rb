@@ -13,7 +13,7 @@ module Piggly
     class << Report
       def main(argv)
         require "pp"
-        io, config, sonar_path, html_report_requested = configure(argv)
+        io, config, sonar_path, schema_csv_path, html_report_requested = configure(argv)
 
         profile = Profile.new
         index   = Dumper::Index.new(config)
@@ -46,9 +46,14 @@ module Piggly
         if sonar_path
           create_sonar_report(config, procedures, profile, sonar_path)
         end
-        
-        unless html_report_requested || sonar_path
-          puts "Warning: No report output specified. Use -o for HTML reports or -x for Sonar report."
+
+        # Generate schema-level CSV report if requested
+        if schema_csv_path
+          create_schema_csv_report(config, procedures, profile, schema_csv_path)
+        end
+
+        unless html_report_requested || sonar_path || schema_csv_path
+          puts "Warning: No report output specified. Use -o for HTML reports, -x for Sonar report, or --schema-csv-path for CSV report."
         end
       end
 
@@ -138,9 +143,19 @@ module Piggly
         puts "Sonar coverage report written to: #{path}"
       end
 
+      # Create schema-level CSV coverage report
+      #
+      def create_schema_csv_report(config, procedures, profile, output_path)
+        puts "creating schema CSV coverage report"
+        reporter = Reporter::SchemaCsv.new(config, profile, output_path)
+        path = reporter.report(procedures)
+        puts "Schema CSV coverage report written to: #{path}"
+      end
+
       def configure(argv, config = Config.new)
         io = $stdin
         sonar_path = nil
+        schema_csv_path = nil
         html_report_requested = false
 
         p  = OptionParser.new do |o|
@@ -154,6 +169,9 @@ module Piggly
           end
           o.on("-x", "--sonar-report-path PATH",  "generate Sonar coverage XML report at PATH") do |path|
             sonar_path = path
+          end
+          o.on("--schema-csv-path PATH", "generate schema-level CSV coverage report at PATH") do |path|
+            schema_csv_path = path
           end
           o.on("-a", "--accumulate",        "accumulate data from the previous run", &o_accumulate(config))
           o.on("-V", "--version",           "show version", &o_version(config))
@@ -170,9 +188,9 @@ module Piggly
         begin
           p.parse! argv
 
-          unless html_report_requested || sonar_path
+          unless html_report_requested || sonar_path || schema_csv_path
             raise OptionParser::MissingArgument,
-              "at least one report type required: use -o for HTML reports or -x for Sonar report"
+              "at least one report type required: use -o for HTML reports, -x for Sonar report, or --schema-csv-path for CSV report"
           end
           
           if io.eql?($stdin) and $stdin.tty?
@@ -180,7 +198,7 @@ module Piggly
               "stdin must be a pipe, or use --input PATH"
           end
 
-          return io, config, sonar_path, html_report_requested
+          return io, config, sonar_path, schema_csv_path, html_report_requested
         rescue OptionParser::InvalidOption,
                OptionParser::InvalidArgument,
                OptionParser::MissingArgument
