@@ -118,12 +118,14 @@ module Piggly
   class ReportTask < AbstractTask
     attr_accessor :report_root,   # Where to store reports (default piggly/report)
                   :accumulate,    # Accumulate coverage from the previous run (default false)
-                  :trace_file
+                  :trace_file,
+                  :schema_csv_path
 
     def initialize(name = :report)
       @accumulate  = false
       @trace_file  = nil
       @report_root = nil
+      @schema_csv_path = nil
       super(name)
     end
 
@@ -141,6 +143,7 @@ module Piggly
           opts.concat(["--trace-file",  @trace_file])
           opts.concat(["--cache-root",  @cache_root]) if @cache_root
           opts.concat(["--report-root", @report_root]) if @report_root
+          opts.concat(["--schema-csv-path", @schema_csv_path]) if @schema_csv_path
 
           case @procedures
           when String then opts.concat(["--name", @procedures])

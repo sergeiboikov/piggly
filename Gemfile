@@ -2,6 +2,7 @@ source "http://rubygems.org"
 
 gem "pg",           "~> 1.6"
 gem "treetop",      "~> 1.6"
+gem "csv",          ">= 3.3"
 
 group :test, :development do
   gem "rake",                     :require => false

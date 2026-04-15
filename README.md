@@ -139,6 +139,20 @@ To generate a SonarQube-compatible coverage report, use the `--sonar-report-path
 
 This generates an XML file in SonarQube's [generic test coverage format](https://docs.sonarsource.com/sonarqube-server/latest/analyzing-source-code/test-coverage/generic-test-data/).
 
+### Schema CSV Report
+
+To generate a schema-level CSV report, use the `--schema-csv-path` option:
+
+    $ piggly report -f messages.txt --schema-csv-path piggly/reports/coverage_by_schema.csv
+
+The CSV report groups procedures by schema and contains the following columns:
+
+- `No`
+- `Schema Name`
+- `Objects Count`
+- `Covered Objects`
+- `Line Coverage Percent`
+
 ## Running the Examples
 
     $ cd piggly
