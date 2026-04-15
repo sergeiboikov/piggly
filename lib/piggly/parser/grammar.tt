@@ -177,7 +177,7 @@ grammar PigglyParser
     label_open:tLabelDefinition tSpace
     kwFOR tSpace identifierList tSpace
     kwIN
-      condSpace:tSpace
+      condSpace:tSpace?
       cond:( stmtForSql / expressionUntilLoop )
     kwLOOP
       bodySpace:tSpace
@@ -190,7 +190,7 @@ grammar PigglyParser
     /
     kwFOR tSpace identifierList tSpace
     kwIN
-      condSpace:tSpace
+      condSpace:tSpace?
       cond:( stmtForSql / expressionUntilLoop )
     kwLOOP
       bodySpace:tSpace
