@@ -8291,217 +8291,229 @@ module PigglyParser
             r5 = SyntaxNode.new(input, (index-1)...index) if r5 == true
             r1 = r5
           else
-            if (match_len = has_terminal?('perform', false, index))
+            if (match_len = has_terminal?('merge', false, index))
               r6 = instantiate_node(SyntaxNode,input, index...(index + match_len))
               @index += match_len
             else
-              terminal_parse_failure('\'perform\'')
+              terminal_parse_failure('\'merge\'')
               r6 = nil
             end
             if r6
               r6 = SyntaxNode.new(input, (index-1)...index) if r6 == true
               r1 = r6
             else
-              if (match_len = has_terminal?('execute', false, index))
+              if (match_len = has_terminal?('perform', false, index))
                 r7 = instantiate_node(SyntaxNode,input, index...(index + match_len))
                 @index += match_len
               else
-                terminal_parse_failure('\'execute\'')
+                terminal_parse_failure('\'perform\'')
                 r7 = nil
               end
               if r7
                 r7 = SyntaxNode.new(input, (index-1)...index) if r7 == true
                 r1 = r7
               else
-                if (match_len = has_terminal?('open', false, index))
+                if (match_len = has_terminal?('execute', false, index))
                   r8 = instantiate_node(SyntaxNode,input, index...(index + match_len))
                   @index += match_len
                 else
-                  terminal_parse_failure('\'open\'')
+                  terminal_parse_failure('\'execute\'')
                   r8 = nil
                 end
                 if r8
                   r8 = SyntaxNode.new(input, (index-1)...index) if r8 == true
                   r1 = r8
                 else
-                  if (match_len = has_terminal?('close', false, index))
+                  if (match_len = has_terminal?('open', false, index))
                     r9 = instantiate_node(SyntaxNode,input, index...(index + match_len))
                     @index += match_len
                   else
-                    terminal_parse_failure('\'close\'')
+                    terminal_parse_failure('\'open\'')
                     r9 = nil
                   end
                   if r9
                     r9 = SyntaxNode.new(input, (index-1)...index) if r9 == true
                     r1 = r9
                   else
-                    if (match_len = has_terminal?('lock', false, index))
+                    if (match_len = has_terminal?('close', false, index))
                       r10 = instantiate_node(SyntaxNode,input, index...(index + match_len))
                       @index += match_len
                     else
-                      terminal_parse_failure('\'lock\'')
+                      terminal_parse_failure('\'close\'')
                       r10 = nil
                     end
                     if r10
                       r10 = SyntaxNode.new(input, (index-1)...index) if r10 == true
                       r1 = r10
                     else
-                      if (match_len = has_terminal?('fetch', false, index))
+                      if (match_len = has_terminal?('lock', false, index))
                         r11 = instantiate_node(SyntaxNode,input, index...(index + match_len))
                         @index += match_len
                       else
-                        terminal_parse_failure('\'fetch\'')
+                        terminal_parse_failure('\'lock\'')
                         r11 = nil
                       end
                       if r11
                         r11 = SyntaxNode.new(input, (index-1)...index) if r11 == true
                         r1 = r11
                       else
-                        if (match_len = has_terminal?('move', false, index))
+                        if (match_len = has_terminal?('fetch', false, index))
                           r12 = instantiate_node(SyntaxNode,input, index...(index + match_len))
                           @index += match_len
                         else
-                          terminal_parse_failure('\'move\'')
+                          terminal_parse_failure('\'fetch\'')
                           r12 = nil
                         end
                         if r12
                           r12 = SyntaxNode.new(input, (index-1)...index) if r12 == true
                           r1 = r12
                         else
-                          if (match_len = has_terminal?('truncate', false, index))
+                          if (match_len = has_terminal?('move', false, index))
                             r13 = instantiate_node(SyntaxNode,input, index...(index + match_len))
                             @index += match_len
                           else
-                            terminal_parse_failure('\'truncate\'')
+                            terminal_parse_failure('\'move\'')
                             r13 = nil
                           end
                           if r13
                             r13 = SyntaxNode.new(input, (index-1)...index) if r13 == true
                             r1 = r13
                           else
-                            if (match_len = has_terminal?('create', false, index))
+                            if (match_len = has_terminal?('truncate', false, index))
                               r14 = instantiate_node(SyntaxNode,input, index...(index + match_len))
                               @index += match_len
                             else
-                              terminal_parse_failure('\'create\'')
+                              terminal_parse_failure('\'truncate\'')
                               r14 = nil
                             end
                             if r14
                               r14 = SyntaxNode.new(input, (index-1)...index) if r14 == true
                               r1 = r14
                             else
-                              if (match_len = has_terminal?('drop', false, index))
+                              if (match_len = has_terminal?('create', false, index))
                                 r15 = instantiate_node(SyntaxNode,input, index...(index + match_len))
                                 @index += match_len
                               else
-                                terminal_parse_failure('\'drop\'')
+                                terminal_parse_failure('\'create\'')
                                 r15 = nil
                               end
                               if r15
                                 r15 = SyntaxNode.new(input, (index-1)...index) if r15 == true
                                 r1 = r15
                               else
-                                if (match_len = has_terminal?('alter', false, index))
+                                if (match_len = has_terminal?('drop', false, index))
                                   r16 = instantiate_node(SyntaxNode,input, index...(index + match_len))
                                   @index += match_len
                                 else
-                                  terminal_parse_failure('\'alter\'')
+                                  terminal_parse_failure('\'drop\'')
                                   r16 = nil
                                 end
                                 if r16
                                   r16 = SyntaxNode.new(input, (index-1)...index) if r16 == true
                                   r1 = r16
                                 else
-                                  if (match_len = has_terminal?('commit', false, index))
+                                  if (match_len = has_terminal?('alter', false, index))
                                     r17 = instantiate_node(SyntaxNode,input, index...(index + match_len))
                                     @index += match_len
                                   else
-                                    terminal_parse_failure('\'commit\'')
+                                    terminal_parse_failure('\'alter\'')
                                     r17 = nil
                                   end
                                   if r17
                                     r17 = SyntaxNode.new(input, (index-1)...index) if r17 == true
                                     r1 = r17
                                   else
-                                    if (match_len = has_terminal?('copy', false, index))
+                                    if (match_len = has_terminal?('commit', false, index))
                                       r18 = instantiate_node(SyntaxNode,input, index...(index + match_len))
                                       @index += match_len
                                     else
-                                      terminal_parse_failure('\'copy\'')
+                                      terminal_parse_failure('\'commit\'')
                                       r18 = nil
                                     end
                                     if r18
                                       r18 = SyntaxNode.new(input, (index-1)...index) if r18 == true
                                       r1 = r18
                                     else
-                                      if (match_len = has_terminal?('create', false, index))
+                                      if (match_len = has_terminal?('copy', false, index))
                                         r19 = instantiate_node(SyntaxNode,input, index...(index + match_len))
                                         @index += match_len
                                       else
-                                        terminal_parse_failure('\'create\'')
+                                        terminal_parse_failure('\'copy\'')
                                         r19 = nil
                                       end
                                       if r19
                                         r19 = SyntaxNode.new(input, (index-1)...index) if r19 == true
                                         r1 = r19
                                       else
-                                        if (match_len = has_terminal?('set', false, index))
+                                        if (match_len = has_terminal?('create', false, index))
                                           r20 = instantiate_node(SyntaxNode,input, index...(index + match_len))
                                           @index += match_len
                                         else
-                                          terminal_parse_failure('\'set\'')
+                                          terminal_parse_failure('\'create\'')
                                           r20 = nil
                                         end
                                         if r20
                                           r20 = SyntaxNode.new(input, (index-1)...index) if r20 == true
                                           r1 = r20
                                         else
-                                          if (match_len = has_terminal?('start', false, index))
+                                          if (match_len = has_terminal?('set', false, index))
                                             r21 = instantiate_node(SyntaxNode,input, index...(index + match_len))
                                             @index += match_len
                                           else
-                                            terminal_parse_failure('\'start\'')
+                                            terminal_parse_failure('\'set\'')
                                             r21 = nil
                                           end
                                           if r21
                                             r21 = SyntaxNode.new(input, (index-1)...index) if r21 == true
                                             r1 = r21
                                           else
-                                            if (match_len = has_terminal?('notify', false, index))
+                                            if (match_len = has_terminal?('start', false, index))
                                               r22 = instantiate_node(SyntaxNode,input, index...(index + match_len))
                                               @index += match_len
                                             else
-                                              terminal_parse_failure('\'notify\'')
+                                              terminal_parse_failure('\'start\'')
                                               r22 = nil
                                             end
                                             if r22
                                               r22 = SyntaxNode.new(input, (index-1)...index) if r22 == true
                                               r1 = r22
                                             else
-                                              if (match_len = has_terminal?('call', false, index))
+                                              if (match_len = has_terminal?('notify', false, index))
                                                 r23 = instantiate_node(SyntaxNode,input, index...(index + match_len))
                                                 @index += match_len
                                               else
-                                                terminal_parse_failure('\'call\'')
+                                                terminal_parse_failure('\'notify\'')
                                                 r23 = nil
                                               end
                                               if r23
                                                 r23 = SyntaxNode.new(input, (index-1)...index) if r23 == true
                                                 r1 = r23
                                               else
-                                                if (match_len = has_terminal?('with', false, index))
+                                                if (match_len = has_terminal?('call', false, index))
                                                   r24 = instantiate_node(SyntaxNode,input, index...(index + match_len))
                                                   @index += match_len
                                                 else
-                                                  terminal_parse_failure('\'with\'')
+                                                  terminal_parse_failure('\'call\'')
                                                   r24 = nil
                                                 end
                                                 if r24
                                                   r24 = SyntaxNode.new(input, (index-1)...index) if r24 == true
                                                   r1 = r24
                                                 else
-                                                  @index = i1
-                                                  r1 = nil
+                                                  if (match_len = has_terminal?('with', false, index))
+                                                    r25 = instantiate_node(SyntaxNode,input, index...(index + match_len))
+                                                    @index += match_len
+                                                  else
+                                                    terminal_parse_failure('\'with\'')
+                                                    r25 = nil
+                                                  end
+                                                  if r25
+                                                    r25 = SyntaxNode.new(input, (index-1)...index) if r25 == true
+                                                    r1 = r25
+                                                  else
+                                                    @index = i1
+                                                    r1 = nil
+                                                  end
                                                 end
                                               end
                                             end
@@ -8527,24 +8539,24 @@ module PigglyParser
     end
     s0 << r1
     if r1
-      i25 = index
+      i26 = index
       if has_terminal?(@regexps[gr = '\A[a-z0-9]'] ||= Regexp.new(gr), :regexp, index)
-        r26 = true
+        r27 = true
         @index += 1
       else
         terminal_parse_failure('[a-z0-9]')
-        r26 = nil
+        r27 = nil
       end
-      if r26
-        @index = i25
-        r25 = nil
+      if r27
+        @index = i26
+        r26 = nil
         terminal_parse_failure('[a-z0-9]', true)
       else
         @terminal_failures.pop
-        @index = i25
-        r25 = instantiate_node(SyntaxNode,input, index...index)
+        @index = i26
+        r26 = instantiate_node(SyntaxNode,input, index...index)
       end
-      s0 << r25
+      s0 << r26
     end
     if s0.last
       r0 = instantiate_node(Piggly::Parser::Nodes::TKeyword,input, i0...index, s0)

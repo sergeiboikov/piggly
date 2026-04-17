@@ -13,6 +13,20 @@ module Piggly
         rest.should == ''
       end
 
+      it "parses MERGE statements" do
+        node, rest = parse_some(:statement, <<-SQL.strip)
+          MERGE INTO users u
+          USING (SELECT 1 AS id) s
+          ON s.id = u.id
+          WHEN NOT MATCHED THEN
+            INSERT (id) VALUES (s.id);
+        SQL
+        node.should be_statement
+        node.count{|e| e.sql? }.should == 1
+        node.find{|e| e.sql? }.source_text.should =~ /\Amerge into users/mi
+        rest.should == ''
+      end
+
       it "must end with a semicolon" do
         expect{ parse(:statement, 'SELECT id FROM users') }.to raise_error(Piggly::Parser::Failure)
         expect{ parse_some(:statement, 'SELECT id FROM users') }.to raise_error(Piggly::Parser::Failure)
