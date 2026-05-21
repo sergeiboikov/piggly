@@ -23,7 +23,7 @@ module Piggly
         data = trace.compile(procedure)
 
         return :html  => traverse(data[:tree], profile),
-               :lines => 1 .. procedure.source(@config).count("\n") + 1
+               :lines => 1 .. Util::LineNumbers.count(procedure.source(@config))
       end
 
     protected

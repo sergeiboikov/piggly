@@ -52,9 +52,14 @@ module Piggly
         source_path = make_relative_path(absolute_path)
         
         io.puts "  <file path=\"#{escape_xml(source_path)}\">"
-        
+
+        source = procedure.source(@config)
+        max_line = Util::LineNumbers.count(source)
+
         # Sort lines and output coverage data
         coverage.keys.sort.each do |line|
+          next if line < 1 || line > max_line
+
           line_data = coverage[line]
           write_line_coverage(io, line, line_data)
         end

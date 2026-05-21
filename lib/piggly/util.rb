@@ -5,5 +5,6 @@ module Piggly
     autoload :Cacheable,    "piggly/util/cacheable"
     autoload :Enumerable,   "piggly/util/enumerable"
     autoload :File,         "piggly/util/file"
+    autoload :LineNumbers,  "piggly/util/line_numbers"
   end
 end

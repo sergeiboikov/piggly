@@ -4,7 +4,7 @@ module Piggly
     MINOR = 3
     TINY  = 5
 
-    RELEASE_DATE = "2026-04-15"
+    RELEASE_DATE = "2026-05-21"
   end
 
   class << VERSION
