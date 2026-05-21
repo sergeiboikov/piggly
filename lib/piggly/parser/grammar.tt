@@ -253,11 +253,11 @@ grammar PigglyParser
   end
 
   rule stmtExecSql
-    sqlKeyword tSpace expressionUntilSemiColon ';' <Piggly::Parser::Nodes::Sql>
+    sqlKeyword ( tSpace expressionUntilSemiColon )? ';' <Piggly::Parser::Nodes::Sql>
   end
 
   rule stmtGetDiag
-    kwGET tSpace ( kwSTACKED tSpace )? kwDIAGNOSTICS tSpace expressionUntilSemiColon ';' <Piggly::Parser::Nodes::Expression>
+    kwGET tSpace ( ( kwCURRENT / kwSTACKED ) tSpace )? kwDIAGNOSTICS tSpace expressionUntilSemiColon ';' <Piggly::Parser::Nodes::Expression>
   end
 
   rule stmtNull
@@ -345,18 +345,24 @@ grammar PigglyParser
   end
 
   rule expressionUntilThen
-    head:tSpace? expr:( tString / skipWords / tSpace !kwTHEN / !tSpace !kwTHEN . )+
+    head:tSpace? expr:( sqlCaseExpression / tString / skipWords / tSpace !kwTHEN / !tSpace !kwTHEN . )+
     tail:tSpace &kwTHEN <Piggly::Parser::Nodes::Expression>
   end
 
   rule expressionUntilWhen
-    head:tSpace? expr:( tString / skipWords / tSpace !kwWHEN / !tSpace !kwWHEN . )+
+    head:tSpace? expr:( sqlCaseExpression / tString / skipWords / tSpace !kwWHEN / !tSpace !kwWHEN . )+
     tail:tSpace &kwWHEN <Piggly::Parser::Nodes::Expression>
   end
 
   rule expressionUntilLoop
-    head:tSpace? expr:( tString / skipWords / tSpace !kwLOOP / !tSpace !kwLOOP . )+
+    head:tSpace? expr:( sqlCaseExpression / tString / skipWords / tSpace !kwLOOP / !tSpace !kwLOOP . )+
     tail:tSpace &kwLOOP <Piggly::Parser::Nodes::Expression>
+  end
+
+  rule sqlCaseExpression
+    kwCASE
+    ( sqlCaseExpression / tString / tSpace / !kwEND . )+
+    kwEND ![a-z0-9_] <Piggly::Parser::Nodes::TextNode>
   end
 
   rule skipWords
@@ -490,6 +496,7 @@ grammar PigglyParser
     / 'drop'
     / 'alter'
     / 'commit'
+    / 'rollback'
     / 'copy'
     / 'create'
     / 'set'
@@ -712,6 +719,10 @@ grammar PigglyParser
 
   rule kwSCROLL
     'scroll' ![a-z0-9_] <Piggly::Parser::Nodes::TKeyword>
+  end
+
+  rule kwCURRENT
+    'current' ![a-z0-9_] <Piggly::Parser::Nodes::TKeyword>
   end
 
   rule kwSTACKED
