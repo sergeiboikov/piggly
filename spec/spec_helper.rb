@@ -26,7 +26,7 @@ module Piggly
 
     COMMENTS = ["abc defghi", "abc -- abc", "quote's", "a 'str'"]
 
-    SQLWORDS = %w[select insert update delete drop alter commit set start]
+    SQLWORDS = %w[select insert update delete merge drop alter commit set start]
 
     KEYWORDS = %w[as := = alias begin by constant continue
                   cursor debug declare diagnostics else elsif elseif

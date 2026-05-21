@@ -2419,99 +2419,104 @@ module PigglyParser
                 r8 = _nt_kwIN
                 s1 << r8
                 if r8
-                  r9 = _nt_tSpace
+                  r10 = _nt_tSpace
+                  if r10
+                    r9 = r10
+                  else
+                    r9 = instantiate_node(SyntaxNode,input, index...index)
+                  end
                   s1 << r9
                   if r9
-                    i10 = index
-                    r11 = _nt_stmtForSql
-                    if r11
-                      r11 = SyntaxNode.new(input, (index-1)...index) if r11 == true
-                      r10 = r11
+                    i11 = index
+                    r12 = _nt_stmtForSql
+                    if r12
+                      r12 = SyntaxNode.new(input, (index-1)...index) if r12 == true
+                      r11 = r12
                     else
-                      r12 = _nt_expressionUntilLoop
-                      if r12
-                        r12 = SyntaxNode.new(input, (index-1)...index) if r12 == true
-                        r10 = r12
+                      r13 = _nt_expressionUntilLoop
+                      if r13
+                        r13 = SyntaxNode.new(input, (index-1)...index) if r13 == true
+                        r11 = r13
                       else
-                        @index = i10
-                        r10 = nil
+                        @index = i11
+                        r11 = nil
                       end
                     end
-                    s1 << r10
-                    if r10
-                      r13 = _nt_kwLOOP
-                      s1 << r13
-                      if r13
-                        r14 = _nt_tSpace
-                        s1 << r14
-                        if r14
-                          r15 = _nt_stubNode
-                          s1 << r15
-                          if r15
-                            s16, i16 = [], index
+                    s1 << r11
+                    if r11
+                      r14 = _nt_kwLOOP
+                      s1 << r14
+                      if r14
+                        r15 = _nt_tSpace
+                        s1 << r15
+                        if r15
+                          r16 = _nt_stubNode
+                          s1 << r16
+                          if r16
+                            s17, i17 = [], index
                             loop do
-                              r17 = _nt_statement
-                              if r17
-                                s16 << r17
+                              r18 = _nt_statement
+                              if r18
+                                s17 << r18
                               else
                                 break
                               end
                             end
-                            r16 = instantiate_node(SyntaxNode,input, i16...index, s16)
-                            s1 << r16
-                            if r16
-                              r18 = _nt_stubNode
-                              s1 << r18
-                              if r18
-                                r19 = _nt_kwEND
-                                s1 << r19
-                                if r19
-                                  r20 = _nt_tSpace
-                                  s1 << r20
-                                  if r20
-                                    r21 = _nt_kwLOOP
-                                    s1 << r21
-                                    if r21
-                                      i23, s23 = index, []
-                                      r24 = _nt_tSpace
-                                      s23 << r24
+                            r17 = instantiate_node(SyntaxNode,input, i17...index, s17)
+                            s1 << r17
+                            if r17
+                              r19 = _nt_stubNode
+                              s1 << r19
+                              if r19
+                                r20 = _nt_kwEND
+                                s1 << r20
+                                if r20
+                                  r21 = _nt_tSpace
+                                  s1 << r21
+                                  if r21
+                                    r22 = _nt_kwLOOP
+                                    s1 << r22
+                                    if r22
+                                      i24, s24 = index, []
+                                      r25 = _nt_tSpace
+                                      s24 << r25
+                                      if r25
+                                        r26 = _nt_tLabel
+                                        s24 << r26
+                                      end
+                                      if s24.last
+                                        r24 = instantiate_node(Piggly::Parser::Nodes::TLabel,input, i24...index, s24)
+                                        r24.extend(StmtForLoop0)
+                                      else
+                                        @index = i24
+                                        r24 = nil
+                                      end
                                       if r24
-                                        r25 = _nt_tLabel
-                                        s23 << r25
-                                      end
-                                      if s23.last
-                                        r23 = instantiate_node(Piggly::Parser::Nodes::TLabel,input, i23...index, s23)
-                                        r23.extend(StmtForLoop0)
+                                        r23 = r24
                                       else
-                                        @index = i23
-                                        r23 = nil
+                                        r23 = instantiate_node(SyntaxNode,input, index...index)
                                       end
+                                      s1 << r23
                                       if r23
-                                        r22 = r23
-                                      else
-                                        r22 = instantiate_node(SyntaxNode,input, index...index)
-                                      end
-                                      s1 << r22
-                                      if r22
-                                        r27 = _nt_tSpace
-                                        if r27
-                                          r26 = r27
+                                        r28 = _nt_tSpace
+                                        if r28
+                                          r27 = r28
                                         else
-                                          r26 = instantiate_node(SyntaxNode,input, index...index)
+                                          r27 = instantiate_node(SyntaxNode,input, index...index)
                                         end
-                                        s1 << r26
-                                        if r26
+                                        s1 << r27
+                                        if r27
                                           if (match_len = has_terminal?(';', false, index))
-                                            r28 = true
+                                            r29 = true
                                             @index += match_len
                                           else
                                             terminal_parse_failure('\';\'')
-                                            r28 = nil
+                                            r29 = nil
                                           end
-                                          s1 << r28
-                                          if r28
-                                            r29 = _nt_stubNode
-                                            s1 << r29
+                                          s1 << r29
+                                          if r29
+                                            r30 = _nt_stubNode
+                                            s1 << r30
                                           end
                                         end
                                       end
@@ -2543,94 +2548,99 @@ module PigglyParser
       r1 = SyntaxNode.new(input, (index-1)...index) if r1 == true
       r0 = r1
     else
-      i30, s30 = index, []
-      r31 = _nt_kwFOR
-      s30 << r31
-      if r31
-        r32 = _nt_tSpace
-        s30 << r32
-        if r32
-          r33 = _nt_identifierList
-          s30 << r33
-          if r33
-            r34 = _nt_tSpace
-            s30 << r34
-            if r34
-              r35 = _nt_kwIN
-              s30 << r35
-              if r35
-                r36 = _nt_tSpace
-                s30 << r36
-                if r36
-                  i37 = index
-                  r38 = _nt_stmtForSql
-                  if r38
-                    r38 = SyntaxNode.new(input, (index-1)...index) if r38 == true
-                    r37 = r38
+      i31, s31 = index, []
+      r32 = _nt_kwFOR
+      s31 << r32
+      if r32
+        r33 = _nt_tSpace
+        s31 << r33
+        if r33
+          r34 = _nt_identifierList
+          s31 << r34
+          if r34
+            r35 = _nt_tSpace
+            s31 << r35
+            if r35
+              r36 = _nt_kwIN
+              s31 << r36
+              if r36
+                r38 = _nt_tSpace
+                if r38
+                  r37 = r38
+                else
+                  r37 = instantiate_node(SyntaxNode,input, index...index)
+                end
+                s31 << r37
+                if r37
+                  i39 = index
+                  r40 = _nt_stmtForSql
+                  if r40
+                    r40 = SyntaxNode.new(input, (index-1)...index) if r40 == true
+                    r39 = r40
                   else
-                    r39 = _nt_expressionUntilLoop
-                    if r39
-                      r39 = SyntaxNode.new(input, (index-1)...index) if r39 == true
-                      r37 = r39
+                    r41 = _nt_expressionUntilLoop
+                    if r41
+                      r41 = SyntaxNode.new(input, (index-1)...index) if r41 == true
+                      r39 = r41
                     else
-                      @index = i37
-                      r37 = nil
+                      @index = i39
+                      r39 = nil
                     end
                   end
-                  s30 << r37
-                  if r37
-                    r40 = _nt_kwLOOP
-                    s30 << r40
-                    if r40
-                      r41 = _nt_tSpace
-                      s30 << r41
-                      if r41
-                        r42 = _nt_stubNode
-                        s30 << r42
-                        if r42
-                          s43, i43 = [], index
+                  s31 << r39
+                  if r39
+                    r42 = _nt_kwLOOP
+                    s31 << r42
+                    if r42
+                      r43 = _nt_tSpace
+                      s31 << r43
+                      if r43
+                        r44 = _nt_stubNode
+                        s31 << r44
+                        if r44
+                          s45, i45 = [], index
                           loop do
-                            r44 = _nt_statement
-                            if r44
-                              s43 << r44
+                            r46 = _nt_statement
+                            if r46
+                              s45 << r46
                             else
                               break
                             end
                           end
-                          r43 = instantiate_node(SyntaxNode,input, i43...index, s43)
-                          s30 << r43
-                          if r43
-                            r45 = _nt_stubNode
-                            s30 << r45
-                            if r45
-                              r46 = _nt_kwEND
-                              s30 << r46
-                              if r46
-                                r47 = _nt_tSpace
-                                s30 << r47
-                                if r47
-                                  r48 = _nt_kwLOOP
-                                  s30 << r48
-                                  if r48
-                                    r50 = _nt_tSpace
-                                    if r50
-                                      r49 = r50
+                          r45 = instantiate_node(SyntaxNode,input, i45...index, s45)
+                          s31 << r45
+                          if r45
+                            r47 = _nt_stubNode
+                            s31 << r47
+                            if r47
+                              r48 = _nt_kwEND
+                              s31 << r48
+                              if r48
+                                r49 = _nt_tSpace
+                                s31 << r49
+                                if r49
+                                  r50 = _nt_kwLOOP
+                                  s31 << r50
+                                  if r50
+                                    r52 = _nt_tSpace
+                                    if r52
+                                      r51 = r52
                                     else
-                                      r49 = instantiate_node(SyntaxNode,input, index...index)
+                                      r51 = instantiate_node(SyntaxNode,input, index...index)
                                     end
-                                    s30 << r49
-                                    if r49
+                                    s31 << r51
+                                    if r51
                                       if (match_len = has_terminal?(';', false, index))
-                                        r51 = true
+                                        r53 = true
                                         @index += match_len
                                       else
                                         terminal_parse_failure('\';\'')
-                                        r51 = nil
+                                        r53 = nil
                                       end
-                                      s30 << r51
-                                      if r51
-                                        r52 = _nt_stubNode
-                                        s30 << r52
+                                      s31 << r53
+                                      if r53
+                                        r54 = _nt_stubNode
+                                        s31 << r54
                                       end
                                     end
                                   end
@@ -2648,16 +2658,16 @@ module PigglyParser
           end
         end
       end
-      if s30.last
-        r30 = instantiate_node(Piggly::Parser::Nodes::ForLoop,input, i30...index, s30)
-        r30.extend(StmtForLoop2)
+      if s31.last
+        r31 = instantiate_node(Piggly::Parser::Nodes::ForLoop,input, i31...index, s31)
+        r31.extend(StmtForLoop2)
       else
-        @index = i30
-        r30 = nil
+        @index = i31
+        r31 = nil
       end
-      if r30
-        r30 = SyntaxNode.new(input, (index-1)...index) if r30 == true
-        r0 = r30
+      if r31
+        r31 = SyntaxNode.new(input, (index-1)...index) if r31 == true
+        r0 = r31
       else
         @index = i0
         r0 = nil
@@ -3651,16 +3661,18 @@ module PigglyParser
   end
 
   module StmtExecSql0
-    def sqlKeyword
+    def tSpace
       elements[0]
     end
 
-    def tSpace
+    def expressionUntilSemiColon
       elements[1]
     end
+  end
 
-    def expressionUntilSemiColon
-      elements[2]
+  module StmtExecSql1
+    def sqlKeyword
+      elements[0]
     end
 
   end
@@ -3680,26 +3692,40 @@ module PigglyParser
     r1 = _nt_sqlKeyword
     s0 << r1
     if r1
-      r2 = _nt_tSpace
+      i3, s3 = index, []
+      r4 = _nt_tSpace
+      s3 << r4
+      if r4
+        r5 = _nt_expressionUntilSemiColon
+        s3 << r5
+      end
+      if s3.last
+        r3 = instantiate_node(SyntaxNode,input, i3...index, s3)
+        r3.extend(StmtExecSql0)
+      else
+        @index = i3
+        r3 = nil
+      end
+      if r3
+        r2 = r3
+      else
+        r2 = instantiate_node(SyntaxNode,input, index...index)
+      end
       s0 << r2
       if r2
-        r3 = _nt_expressionUntilSemiColon
-        s0 << r3
-        if r3
-          if (match_len = has_terminal?(';', false, index))
-            r4 = true
-            @index += match_len
-          else
-            terminal_parse_failure('\';\'')
-            r4 = nil
-          end
-          s0 << r4
+        if (match_len = has_terminal?(';', false, index))
+          r6 = true
+          @index += match_len
+        else
+          terminal_parse_failure('\';\'')
+          r6 = nil
         end
+        s0 << r6
       end
     end
     if s0.last
       r0 = instantiate_node(Piggly::Parser::Nodes::Sql,input, i0...index, s0)
-      r0.extend(StmtExecSql0)
+      r0.extend(StmtExecSql1)
     else
       @index = i0
       r0 = nil
@@ -3711,10 +3737,6 @@ module PigglyParser
   end
 
   module StmtGetDiag0
-    def kwSTACKED
-      elements[0]
-    end
-
     def tSpace
       elements[1]
     end
@@ -3762,11 +3784,25 @@ module PigglyParser
       s0 << r2
       if r2
         i4, s4 = index, []
-        r5 = _nt_kwSTACKED
+        i5 = index
+        r6 = _nt_kwCURRENT
+        if r6
+          r6 = SyntaxNode.new(input, (index-1)...index) if r6 == true
+          r5 = r6
+        else
+          r7 = _nt_kwSTACKED
+          if r7
+            r7 = SyntaxNode.new(input, (index-1)...index) if r7 == true
+            r5 = r7
+          else
+            @index = i5
+            r5 = nil
+          end
+        end
         s4 << r5
         if r5
-          r6 = _nt_tSpace
-          s4 << r6
+          r8 = _nt_tSpace
+          s4 << r8
         end
         if s4.last
           r4 = instantiate_node(SyntaxNode,input, i4...index, s4)
@@ -3782,23 +3818,23 @@ module PigglyParser
         end
         s0 << r3
         if r3
-          r7 = _nt_kwDIAGNOSTICS
-          s0 << r7
-          if r7
-            r8 = _nt_tSpace
-            s0 << r8
-            if r8
-              r9 = _nt_expressionUntilSemiColon
-              s0 << r9
-              if r9
+          r9 = _nt_kwDIAGNOSTICS
+          s0 << r9
+          if r9
+            r10 = _nt_tSpace
+            s0 << r10
+            if r10
+              r11 = _nt_expressionUntilSemiColon
+              s0 << r11
+              if r11
                 if (match_len = has_terminal?(';', false, index))
-                  r10 = true
+                  r12 = true
                   @index += match_len
                 else
                   terminal_parse_failure('\';\'')
-                  r10 = nil
+                  r12 = nil
                 end
-                s0 << r10
+                s0 << r12
               end
             end
           end
@@ -5211,88 +5247,94 @@ module PigglyParser
       s3, i3 = [], index
       loop do
         i4 = index
-        r5 = _nt_tString
+        r5 = _nt_sqlCaseExpression
         if r5
           r5 = SyntaxNode.new(input, (index-1)...index) if r5 == true
           r4 = r5
         else
-          r6 = _nt_skipWords
+          r6 = _nt_tString
           if r6
             r6 = SyntaxNode.new(input, (index-1)...index) if r6 == true
             r4 = r6
           else
-            i7, s7 = index, []
-            r8 = _nt_tSpace
-            s7 << r8
-            if r8
-              i9 = index
-              r10 = _nt_kwTHEN
-              if r10
-                @index = i9
-                r9 = nil
-              else
-                @index = i9
-                r9 = instantiate_node(SyntaxNode,input, index...index)
-              end
-              s7 << r9
-            end
-            if s7.last
-              r7 = instantiate_node(SyntaxNode,input, i7...index, s7)
-              r7.extend(ExpressionUntilThen0)
-            else
-              @index = i7
-              r7 = nil
-            end
+            r7 = _nt_skipWords
             if r7
               r7 = SyntaxNode.new(input, (index-1)...index) if r7 == true
               r4 = r7
             else
-              i11, s11 = index, []
-              i12 = index
-              r13 = _nt_tSpace
-              if r13
-                @index = i12
-                r12 = nil
-              else
-                @index = i12
-                r12 = instantiate_node(SyntaxNode,input, index...index)
-              end
-              s11 << r12
-              if r12
-                i14 = index
-                r15 = _nt_kwTHEN
-                if r15
-                  @index = i14
-                  r14 = nil
+              i8, s8 = index, []
+              r9 = _nt_tSpace
+              s8 << r9
+              if r9
+                i10 = index
+                r11 = _nt_kwTHEN
+                if r11
+                  @index = i10
+                  r10 = nil
                 else
-                  @index = i14
-                  r14 = instantiate_node(SyntaxNode,input, index...index)
+                  @index = i10
+                  r10 = instantiate_node(SyntaxNode,input, index...index)
                 end
-                s11 << r14
+                s8 << r10
+              end
+              if s8.last
+                r8 = instantiate_node(SyntaxNode,input, i8...index, s8)
+                r8.extend(ExpressionUntilThen0)
+              else
+                @index = i8
+                r8 = nil
+              end
+              if r8
+                r8 = SyntaxNode.new(input, (index-1)...index) if r8 == true
+                r4 = r8
+              else
+                i12, s12 = index, []
+                i13 = index
+                r14 = _nt_tSpace
                 if r14
-                  if index < input_length
-                    r16 = true
-                    @index += 1
-                  else
-                    terminal_parse_failure("any character")
-                    r16 = nil
-                  end
-                  s11 << r16
+                  @index = i13
+                  r13 = nil
+                else
+                  @index = i13
+                  r13 = instantiate_node(SyntaxNode,input, index...index)
                 end
-              end
-              if s11.last
-                r11 = instantiate_node(SyntaxNode,input, i11...index, s11)
-                r11.extend(ExpressionUntilThen1)
-              else
-                @index = i11
-                r11 = nil
-              end
-              if r11
-                r11 = SyntaxNode.new(input, (index-1)...index) if r11 == true
-                r4 = r11
-              else
-                @index = i4
-                r4 = nil
+                s12 << r13
+                if r13
+                  i15 = index
+                  r16 = _nt_kwTHEN
+                  if r16
+                    @index = i15
+                    r15 = nil
+                  else
+                    @index = i15
+                    r15 = instantiate_node(SyntaxNode,input, index...index)
+                  end
+                  s12 << r15
+                  if r15
+                    if index < input_length
+                      r17 = true
+                      @index += 1
+                    else
+                      terminal_parse_failure("any character")
+                      r17 = nil
+                    end
+                    s12 << r17
+                  end
+                end
+                if s12.last
+                  r12 = instantiate_node(SyntaxNode,input, i12...index, s12)
+                  r12.extend(ExpressionUntilThen1)
+                else
+                  @index = i12
+                  r12 = nil
+                end
+                if r12
+                  r12 = SyntaxNode.new(input, (index-1)...index) if r12 == true
+                  r4 = r12
+                else
+                  @index = i4
+                  r4 = nil
+                end
               end
             end
           end
@@ -5311,19 +5353,19 @@ module PigglyParser
       end
       s0 << r3
       if r3
-        r17 = _nt_tSpace
-        s0 << r17
-        if r17
-          i18 = index
-          r19 = _nt_kwTHEN
-          if r19
-            @index = i18
-            r18 = instantiate_node(SyntaxNode,input, index...index)
+        r18 = _nt_tSpace
+        s0 << r18
+        if r18
+          i19 = index
+          r20 = _nt_kwTHEN
+          if r20
+            @index = i19
+            r19 = instantiate_node(SyntaxNode,input, index...index)
           else
-            @index = i18
-            r18 = nil
+            @index = i19
+            r19 = nil
           end
-          s0 << r18
+          s0 << r19
         end
       end
     end
@@ -5388,88 +5430,94 @@ module PigglyParser
       s3, i3 = [], index
       loop do
         i4 = index
-        r5 = _nt_tString
+        r5 = _nt_sqlCaseExpression
         if r5
           r5 = SyntaxNode.new(input, (index-1)...index) if r5 == true
           r4 = r5
         else
-          r6 = _nt_skipWords
+          r6 = _nt_tString
           if r6
             r6 = SyntaxNode.new(input, (index-1)...index) if r6 == true
             r4 = r6
           else
-            i7, s7 = index, []
-            r8 = _nt_tSpace
-            s7 << r8
-            if r8
-              i9 = index
-              r10 = _nt_kwWHEN
-              if r10
-                @index = i9
-                r9 = nil
-              else
-                @index = i9
-                r9 = instantiate_node(SyntaxNode,input, index...index)
-              end
-              s7 << r9
-            end
-            if s7.last
-              r7 = instantiate_node(SyntaxNode,input, i7...index, s7)
-              r7.extend(ExpressionUntilWhen0)
-            else
-              @index = i7
-              r7 = nil
-            end
+            r7 = _nt_skipWords
             if r7
               r7 = SyntaxNode.new(input, (index-1)...index) if r7 == true
               r4 = r7
             else
-              i11, s11 = index, []
-              i12 = index
-              r13 = _nt_tSpace
-              if r13
-                @index = i12
-                r12 = nil
-              else
-                @index = i12
-                r12 = instantiate_node(SyntaxNode,input, index...index)
-              end
-              s11 << r12
-              if r12
-                i14 = index
-                r15 = _nt_kwWHEN
-                if r15
-                  @index = i14
-                  r14 = nil
+              i8, s8 = index, []
+              r9 = _nt_tSpace
+              s8 << r9
+              if r9
+                i10 = index
+                r11 = _nt_kwWHEN
+                if r11
+                  @index = i10
+                  r10 = nil
                 else
-                  @index = i14
-                  r14 = instantiate_node(SyntaxNode,input, index...index)
+                  @index = i10
+                  r10 = instantiate_node(SyntaxNode,input, index...index)
                 end
-                s11 << r14
+                s8 << r10
+              end
+              if s8.last
+                r8 = instantiate_node(SyntaxNode,input, i8...index, s8)
+                r8.extend(ExpressionUntilWhen0)
+              else
+                @index = i8
+                r8 = nil
+              end
+              if r8
+                r8 = SyntaxNode.new(input, (index-1)...index) if r8 == true
+                r4 = r8
+              else
+                i12, s12 = index, []
+                i13 = index
+                r14 = _nt_tSpace
                 if r14
-                  if index < input_length
-                    r16 = true
-                    @index += 1
-                  else
-                    terminal_parse_failure("any character")
-                    r16 = nil
-                  end
-                  s11 << r16
+                  @index = i13
+                  r13 = nil
+                else
+                  @index = i13
+                  r13 = instantiate_node(SyntaxNode,input, index...index)
                 end
-              end
-              if s11.last
-                r11 = instantiate_node(SyntaxNode,input, i11...index, s11)
-                r11.extend(ExpressionUntilWhen1)
-              else
-                @index = i11
-                r11 = nil
-              end
-              if r11
-                r11 = SyntaxNode.new(input, (index-1)...index) if r11 == true
-                r4 = r11
-              else
-                @index = i4
-                r4 = nil
+                s12 << r13
+                if r13
+                  i15 = index
+                  r16 = _nt_kwWHEN
+                  if r16
+                    @index = i15
+                    r15 = nil
+                  else
+                    @index = i15
+                    r15 = instantiate_node(SyntaxNode,input, index...index)
+                  end
+                  s12 << r15
+                  if r15
+                    if index < input_length
+                      r17 = true
+                      @index += 1
+                    else
+                      terminal_parse_failure("any character")
+                      r17 = nil
+                    end
+                    s12 << r17
+                  end
+                end
+                if s12.last
+                  r12 = instantiate_node(SyntaxNode,input, i12...index, s12)
+                  r12.extend(ExpressionUntilWhen1)
+                else
+                  @index = i12
+                  r12 = nil
+                end
+                if r12
+                  r12 = SyntaxNode.new(input, (index-1)...index) if r12 == true
+                  r4 = r12
+                else
+                  @index = i4
+                  r4 = nil
+                end
               end
             end
           end
@@ -5488,19 +5536,19 @@ module PigglyParser
       end
       s0 << r3
       if r3
-        r17 = _nt_tSpace
-        s0 << r17
-        if r17
-          i18 = index
-          r19 = _nt_kwWHEN
-          if r19
-            @index = i18
-            r18 = instantiate_node(SyntaxNode,input, index...index)
+        r18 = _nt_tSpace
+        s0 << r18
+        if r18
+          i19 = index
+          r20 = _nt_kwWHEN
+          if r20
+            @index = i19
+            r19 = instantiate_node(SyntaxNode,input, index...index)
           else
-            @index = i18
-            r18 = nil
+            @index = i19
+            r19 = nil
           end
-          s0 << r18
+          s0 << r19
         end
       end
     end
@@ -5565,88 +5613,94 @@ module PigglyParser
       s3, i3 = [], index
       loop do
         i4 = index
-        r5 = _nt_tString
+        r5 = _nt_sqlCaseExpression
         if r5
           r5 = SyntaxNode.new(input, (index-1)...index) if r5 == true
           r4 = r5
         else
-          r6 = _nt_skipWords
+          r6 = _nt_tString
           if r6
             r6 = SyntaxNode.new(input, (index-1)...index) if r6 == true
             r4 = r6
           else
-            i7, s7 = index, []
-            r8 = _nt_tSpace
-            s7 << r8
-            if r8
-              i9 = index
-              r10 = _nt_kwLOOP
-              if r10
-                @index = i9
-                r9 = nil
-              else
-                @index = i9
-                r9 = instantiate_node(SyntaxNode,input, index...index)
-              end
-              s7 << r9
-            end
-            if s7.last
-              r7 = instantiate_node(SyntaxNode,input, i7...index, s7)
-              r7.extend(ExpressionUntilLoop0)
-            else
-              @index = i7
-              r7 = nil
-            end
+            r7 = _nt_skipWords
             if r7
               r7 = SyntaxNode.new(input, (index-1)...index) if r7 == true
               r4 = r7
             else
-              i11, s11 = index, []
-              i12 = index
-              r13 = _nt_tSpace
-              if r13
-                @index = i12
-                r12 = nil
-              else
-                @index = i12
-                r12 = instantiate_node(SyntaxNode,input, index...index)
-              end
-              s11 << r12
-              if r12
-                i14 = index
-                r15 = _nt_kwLOOP
-                if r15
-                  @index = i14
-                  r14 = nil
+              i8, s8 = index, []
+              r9 = _nt_tSpace
+              s8 << r9
+              if r9
+                i10 = index
+                r11 = _nt_kwLOOP
+                if r11
+                  @index = i10
+                  r10 = nil
                 else
-                  @index = i14
-                  r14 = instantiate_node(SyntaxNode,input, index...index)
+                  @index = i10
+                  r10 = instantiate_node(SyntaxNode,input, index...index)
                 end
-                s11 << r14
+                s8 << r10
+              end
+              if s8.last
+                r8 = instantiate_node(SyntaxNode,input, i8...index, s8)
+                r8.extend(ExpressionUntilLoop0)
+              else
+                @index = i8
+                r8 = nil
+              end
+              if r8
+                r8 = SyntaxNode.new(input, (index-1)...index) if r8 == true
+                r4 = r8
+              else
+                i12, s12 = index, []
+                i13 = index
+                r14 = _nt_tSpace
                 if r14
-                  if index < input_length
-                    r16 = true
-                    @index += 1
-                  else
-                    terminal_parse_failure("any character")
-                    r16 = nil
-                  end
-                  s11 << r16
+                  @index = i13
+                  r13 = nil
+                else
+                  @index = i13
+                  r13 = instantiate_node(SyntaxNode,input, index...index)
                 end
-              end
-              if s11.last
-                r11 = instantiate_node(SyntaxNode,input, i11...index, s11)
-                r11.extend(ExpressionUntilLoop1)
-              else
-                @index = i11
-                r11 = nil
-              end
-              if r11
-                r11 = SyntaxNode.new(input, (index-1)...index) if r11 == true
-                r4 = r11
-              else
-                @index = i4
-                r4 = nil
+                s12 << r13
+                if r13
+                  i15 = index
+                  r16 = _nt_kwLOOP
+                  if r16
+                    @index = i15
+                    r15 = nil
+                  else
+                    @index = i15
+                    r15 = instantiate_node(SyntaxNode,input, index...index)
+                  end
+                  s12 << r15
+                  if r15
+                    if index < input_length
+                      r17 = true
+                      @index += 1
+                    else
+                      terminal_parse_failure("any character")
+                      r17 = nil
+                    end
+                    s12 << r17
+                  end
+                end
+                if s12.last
+                  r12 = instantiate_node(SyntaxNode,input, i12...index, s12)
+                  r12.extend(ExpressionUntilLoop1)
+                else
+                  @index = i12
+                  r12 = nil
+                end
+                if r12
+                  r12 = SyntaxNode.new(input, (index-1)...index) if r12 == true
+                  r4 = r12
+                else
+                  @index = i4
+                  r4 = nil
+                end
               end
             end
           end
@@ -5665,19 +5719,19 @@ module PigglyParser
       end
       s0 << r3
       if r3
-        r17 = _nt_tSpace
-        s0 << r17
-        if r17
-          i18 = index
-          r19 = _nt_kwLOOP
-          if r19
-            @index = i18
-            r18 = instantiate_node(SyntaxNode,input, index...index)
+        r18 = _nt_tSpace
+        s0 << r18
+        if r18
+          i19 = index
+          r20 = _nt_kwLOOP
+          if r20
+            @index = i19
+            r19 = instantiate_node(SyntaxNode,input, index...index)
           else
-            @index = i18
-            r18 = nil
+            @index = i19
+            r19 = nil
           end
-          s0 << r18
+          s0 << r19
         end
       end
     end
@@ -5690,6 +5744,142 @@ module PigglyParser
     end
 
     node_cache[:expressionUntilLoop][start_index] = r0
+
+    r0
+  end
+
+  module SqlCaseExpression0
+  end
+
+  module SqlCaseExpression1
+    def kwCASE
+      elements[0]
+    end
+
+    def kwEND
+      elements[2]
+    end
+
+  end
+
+  def _nt_sqlCaseExpression
+    start_index = index
+    if node_cache[:sqlCaseExpression].has_key?(index)
+      cached = node_cache[:sqlCaseExpression][index]
+      if cached
+        node_cache[:sqlCaseExpression][index] = cached = SyntaxNode.new(input, index...(index + 1)) if cached == true
+        @index = cached.interval.end
+      end
+      return cached
+    end
+
+    i0, s0 = index, []
+    r1 = _nt_kwCASE
+    s0 << r1
+    if r1
+      s2, i2 = [], index
+      loop do
+        i3 = index
+        r4 = _nt_sqlCaseExpression
+        if r4
+          r4 = SyntaxNode.new(input, (index-1)...index) if r4 == true
+          r3 = r4
+        else
+          r5 = _nt_tString
+          if r5
+            r5 = SyntaxNode.new(input, (index-1)...index) if r5 == true
+            r3 = r5
+          else
+            r6 = _nt_tSpace
+            if r6
+              r6 = SyntaxNode.new(input, (index-1)...index) if r6 == true
+              r3 = r6
+            else
+              i7, s7 = index, []
+              i8 = index
+              r9 = _nt_kwEND
+              if r9
+                @index = i8
+                r8 = nil
+              else
+                @index = i8
+                r8 = instantiate_node(SyntaxNode,input, index...index)
+              end
+              s7 << r8
+              if r8
+                if index < input_length
+                  r10 = true
+                  @index += 1
+                else
+                  terminal_parse_failure("any character")
+                  r10 = nil
+                end
+                s7 << r10
+              end
+              if s7.last
+                r7 = instantiate_node(SyntaxNode,input, i7...index, s7)
+                r7.extend(SqlCaseExpression0)
+              else
+                @index = i7
+                r7 = nil
+              end
+              if r7
+                r7 = SyntaxNode.new(input, (index-1)...index) if r7 == true
+                r3 = r7
+              else
+                @index = i3
+                r3 = nil
+              end
+            end
+          end
+        end
+        if r3
+          s2 << r3
+        else
+          break
+        end
+      end
+      if s2.empty?
+        @index = i2
+        r2 = nil
+      else
+        r2 = instantiate_node(SyntaxNode,input, i2...index, s2)
+      end
+      s0 << r2
+      if r2
+        r11 = _nt_kwEND
+        s0 << r11
+        if r11
+          i12 = index
+          if has_terminal?(@regexps[gr = '\A[a-z0-9_]'] ||= Regexp.new(gr), :regexp, index)
+            r13 = true
+            @index += 1
+          else
+            terminal_parse_failure('[a-z0-9_]')
+            r13 = nil
+          end
+          if r13
+            @index = i12
+            r12 = nil
+            terminal_parse_failure('[a-z0-9_]', true)
+          else
+            @terminal_failures.pop
+            @index = i12
+            r12 = instantiate_node(SyntaxNode,input, index...index)
+          end
+          s0 << r12
+        end
+      end
+    end
+    if s0.last
+      r0 = instantiate_node(Piggly::Parser::Nodes::TextNode,input, i0...index, s0)
+      r0.extend(SqlCaseExpression1)
+    else
+      @index = i0
+      r0 = nil
+    end
+
+    node_cache[:sqlCaseExpression][start_index] = r0
 
     r0
   end
@@ -8281,217 +8471,241 @@ module PigglyParser
             r5 = SyntaxNode.new(input, (index-1)...index) if r5 == true
             r1 = r5
           else
-            if (match_len = has_terminal?('perform', false, index))
+            if (match_len = has_terminal?('merge', false, index))
               r6 = instantiate_node(SyntaxNode,input, index...(index + match_len))
               @index += match_len
             else
-              terminal_parse_failure('\'perform\'')
+              terminal_parse_failure('\'merge\'')
               r6 = nil
             end
             if r6
               r6 = SyntaxNode.new(input, (index-1)...index) if r6 == true
               r1 = r6
             else
-              if (match_len = has_terminal?('execute', false, index))
+              if (match_len = has_terminal?('perform', false, index))
                 r7 = instantiate_node(SyntaxNode,input, index...(index + match_len))
                 @index += match_len
               else
-                terminal_parse_failure('\'execute\'')
+                terminal_parse_failure('\'perform\'')
                 r7 = nil
               end
               if r7
                 r7 = SyntaxNode.new(input, (index-1)...index) if r7 == true
                 r1 = r7
               else
-                if (match_len = has_terminal?('open', false, index))
+                if (match_len = has_terminal?('execute', false, index))
                   r8 = instantiate_node(SyntaxNode,input, index...(index + match_len))
                   @index += match_len
                 else
-                  terminal_parse_failure('\'open\'')
+                  terminal_parse_failure('\'execute\'')
                   r8 = nil
                 end
                 if r8
                   r8 = SyntaxNode.new(input, (index-1)...index) if r8 == true
                   r1 = r8
                 else
-                  if (match_len = has_terminal?('close', false, index))
+                  if (match_len = has_terminal?('open', false, index))
                     r9 = instantiate_node(SyntaxNode,input, index...(index + match_len))
                     @index += match_len
                   else
-                    terminal_parse_failure('\'close\'')
+                    terminal_parse_failure('\'open\'')
                     r9 = nil
                   end
                   if r9
                     r9 = SyntaxNode.new(input, (index-1)...index) if r9 == true
                     r1 = r9
                   else
-                    if (match_len = has_terminal?('lock', false, index))
+                    if (match_len = has_terminal?('close', false, index))
                       r10 = instantiate_node(SyntaxNode,input, index...(index + match_len))
                       @index += match_len
                     else
-                      terminal_parse_failure('\'lock\'')
+                      terminal_parse_failure('\'close\'')
                       r10 = nil
                     end
                     if r10
                       r10 = SyntaxNode.new(input, (index-1)...index) if r10 == true
                       r1 = r10
                     else
-                      if (match_len = has_terminal?('fetch', false, index))
+                      if (match_len = has_terminal?('lock', false, index))
                         r11 = instantiate_node(SyntaxNode,input, index...(index + match_len))
                         @index += match_len
                       else
-                        terminal_parse_failure('\'fetch\'')
+                        terminal_parse_failure('\'lock\'')
                         r11 = nil
                       end
                       if r11
                         r11 = SyntaxNode.new(input, (index-1)...index) if r11 == true
                         r1 = r11
                       else
-                        if (match_len = has_terminal?('move', false, index))
+                        if (match_len = has_terminal?('fetch', false, index))
                           r12 = instantiate_node(SyntaxNode,input, index...(index + match_len))
                           @index += match_len
                         else
-                          terminal_parse_failure('\'move\'')
+                          terminal_parse_failure('\'fetch\'')
                           r12 = nil
                         end
                         if r12
                           r12 = SyntaxNode.new(input, (index-1)...index) if r12 == true
                           r1 = r12
                         else
-                          if (match_len = has_terminal?('truncate', false, index))
+                          if (match_len = has_terminal?('move', false, index))
                             r13 = instantiate_node(SyntaxNode,input, index...(index + match_len))
                             @index += match_len
                           else
-                            terminal_parse_failure('\'truncate\'')
+                            terminal_parse_failure('\'move\'')
                             r13 = nil
                           end
                           if r13
                             r13 = SyntaxNode.new(input, (index-1)...index) if r13 == true
                             r1 = r13
                           else
-                            if (match_len = has_terminal?('create', false, index))
+                            if (match_len = has_terminal?('truncate', false, index))
                               r14 = instantiate_node(SyntaxNode,input, index...(index + match_len))
                               @index += match_len
                             else
-                              terminal_parse_failure('\'create\'')
+                              terminal_parse_failure('\'truncate\'')
                               r14 = nil
                             end
                             if r14
                               r14 = SyntaxNode.new(input, (index-1)...index) if r14 == true
                               r1 = r14
                             else
-                              if (match_len = has_terminal?('drop', false, index))
+                              if (match_len = has_terminal?('create', false, index))
                                 r15 = instantiate_node(SyntaxNode,input, index...(index + match_len))
                                 @index += match_len
                               else
-                                terminal_parse_failure('\'drop\'')
+                                terminal_parse_failure('\'create\'')
                                 r15 = nil
                               end
                               if r15
                                 r15 = SyntaxNode.new(input, (index-1)...index) if r15 == true
                                 r1 = r15
                               else
-                                if (match_len = has_terminal?('alter', false, index))
+                                if (match_len = has_terminal?('drop', false, index))
                                   r16 = instantiate_node(SyntaxNode,input, index...(index + match_len))
                                   @index += match_len
                                 else
-                                  terminal_parse_failure('\'alter\'')
+                                  terminal_parse_failure('\'drop\'')
                                   r16 = nil
                                 end
                                 if r16
                                   r16 = SyntaxNode.new(input, (index-1)...index) if r16 == true
                                   r1 = r16
                                 else
-                                  if (match_len = has_terminal?('commit', false, index))
+                                  if (match_len = has_terminal?('alter', false, index))
                                     r17 = instantiate_node(SyntaxNode,input, index...(index + match_len))
                                     @index += match_len
                                   else
-                                    terminal_parse_failure('\'commit\'')
+                                    terminal_parse_failure('\'alter\'')
                                     r17 = nil
                                   end
                                   if r17
                                     r17 = SyntaxNode.new(input, (index-1)...index) if r17 == true
                                     r1 = r17
                                   else
-                                    if (match_len = has_terminal?('copy', false, index))
+                                    if (match_len = has_terminal?('commit', false, index))
                                       r18 = instantiate_node(SyntaxNode,input, index...(index + match_len))
                                       @index += match_len
                                     else
-                                      terminal_parse_failure('\'copy\'')
+                                      terminal_parse_failure('\'commit\'')
                                       r18 = nil
                                     end
                                     if r18
                                       r18 = SyntaxNode.new(input, (index-1)...index) if r18 == true
                                       r1 = r18
                                     else
-                                      if (match_len = has_terminal?('create', false, index))
+                                      if (match_len = has_terminal?('rollback', false, index))
                                         r19 = instantiate_node(SyntaxNode,input, index...(index + match_len))
                                         @index += match_len
                                       else
-                                        terminal_parse_failure('\'create\'')
+                                        terminal_parse_failure('\'rollback\'')
                                         r19 = nil
                                       end
                                       if r19
                                         r19 = SyntaxNode.new(input, (index-1)...index) if r19 == true
                                         r1 = r19
                                       else
-                                        if (match_len = has_terminal?('set', false, index))
+                                        if (match_len = has_terminal?('copy', false, index))
                                           r20 = instantiate_node(SyntaxNode,input, index...(index + match_len))
                                           @index += match_len
                                         else
-                                          terminal_parse_failure('\'set\'')
+                                          terminal_parse_failure('\'copy\'')
                                           r20 = nil
                                         end
                                         if r20
                                           r20 = SyntaxNode.new(input, (index-1)...index) if r20 == true
                                           r1 = r20
                                         else
-                                          if (match_len = has_terminal?('start', false, index))
+                                          if (match_len = has_terminal?('create', false, index))
                                             r21 = instantiate_node(SyntaxNode,input, index...(index + match_len))
                                             @index += match_len
                                           else
-                                            terminal_parse_failure('\'start\'')
+                                            terminal_parse_failure('\'create\'')
                                             r21 = nil
                                           end
                                           if r21
                                             r21 = SyntaxNode.new(input, (index-1)...index) if r21 == true
                                             r1 = r21
                                           else
-                                            if (match_len = has_terminal?('notify', false, index))
+                                            if (match_len = has_terminal?('set', false, index))
                                               r22 = instantiate_node(SyntaxNode,input, index...(index + match_len))
                                               @index += match_len
                                             else
-                                              terminal_parse_failure('\'notify\'')
+                                              terminal_parse_failure('\'set\'')
                                               r22 = nil
                                             end
                                             if r22
                                               r22 = SyntaxNode.new(input, (index-1)...index) if r22 == true
                                               r1 = r22
                                             else
-                                              if (match_len = has_terminal?('call', false, index))
+                                              if (match_len = has_terminal?('start', false, index))
                                                 r23 = instantiate_node(SyntaxNode,input, index...(index + match_len))
                                                 @index += match_len
                                               else
-                                                terminal_parse_failure('\'call\'')
+                                                terminal_parse_failure('\'start\'')
                                                 r23 = nil
                                               end
                                               if r23
                                                 r23 = SyntaxNode.new(input, (index-1)...index) if r23 == true
                                                 r1 = r23
                                               else
-                                                if (match_len = has_terminal?('with', false, index))
+                                                if (match_len = has_terminal?('notify', false, index))
                                                   r24 = instantiate_node(SyntaxNode,input, index...(index + match_len))
                                                   @index += match_len
                                                 else
-                                                  terminal_parse_failure('\'with\'')
+                                                  terminal_parse_failure('\'notify\'')
                                                   r24 = nil
                                                 end
                                                 if r24
                                                   r24 = SyntaxNode.new(input, (index-1)...index) if r24 == true
                                                   r1 = r24
                                                 else
-                                                  @index = i1
-                                                  r1 = nil
+                                                  if (match_len = has_terminal?('call', false, index))
+                                                    r25 = instantiate_node(SyntaxNode,input, index...(index + match_len))
+                                                    @index += match_len
+                                                  else
+                                                    terminal_parse_failure('\'call\'')
+                                                    r25 = nil
+                                                  end
+                                                  if r25
+                                                    r25 = SyntaxNode.new(input, (index-1)...index) if r25 == true
+                                                    r1 = r25
+                                                  else
+                                                    if (match_len = has_terminal?('with', false, index))
+                                                      r26 = instantiate_node(SyntaxNode,input, index...(index + match_len))
+                                                      @index += match_len
+                                                    else
+                                                      terminal_parse_failure('\'with\'')
+                                                      r26 = nil
+                                                    end
+                                                    if r26
+                                                      r26 = SyntaxNode.new(input, (index-1)...index) if r26 == true
+                                                      r1 = r26
+                                                    else
+                                                      @index = i1
+                                                      r1 = nil
+                                                    end
+                                                  end
                                                 end
                                               end
                                             end
@@ -8517,24 +8731,24 @@ module PigglyParser
     end
     s0 << r1
     if r1
-      i25 = index
+      i27 = index
       if has_terminal?(@regexps[gr = '\A[a-z0-9]'] ||= Regexp.new(gr), :regexp, index)
-        r26 = true
+        r28 = true
         @index += 1
       else
         terminal_parse_failure('[a-z0-9]')
-        r26 = nil
+        r28 = nil
       end
-      if r26
-        @index = i25
-        r25 = nil
+      if r28
+        @index = i27
+        r27 = nil
         terminal_parse_failure('[a-z0-9]', true)
       else
         @terminal_failures.pop
-        @index = i25
-        r25 = instantiate_node(SyntaxNode,input, index...index)
+        @index = i27
+        r27 = instantiate_node(SyntaxNode,input, index...index)
       end
-      s0 << r25
+      s0 << r27
     end
     if s0.last
       r0 = instantiate_node(Piggly::Parser::Nodes::TKeyword,input, i0...index, s0)
@@ -11591,6 +11805,62 @@ module PigglyParser
     end
 
     node_cache[:kwSCROLL][start_index] = r0
+
+    r0
+  end
+
+  module KwCURRENT0
+  end
+
+  def _nt_kwCURRENT
+    start_index = index
+    if node_cache[:kwCURRENT].has_key?(index)
+      cached = node_cache[:kwCURRENT][index]
+      if cached
+        node_cache[:kwCURRENT][index] = cached = SyntaxNode.new(input, index...(index + 1)) if cached == true
+        @index = cached.interval.end
+      end
+      return cached
+    end
+
+    i0, s0 = index, []
+    if (match_len = has_terminal?('current', false, index))
+      r1 = instantiate_node(SyntaxNode,input, index...(index + match_len))
+      @index += match_len
+    else
+      terminal_parse_failure('\'current\'')
+      r1 = nil
+    end
+    s0 << r1
+    if r1
+      i2 = index
+      if has_terminal?(@regexps[gr = '\A[a-z0-9_]'] ||= Regexp.new(gr), :regexp, index)
+        r3 = true
+        @index += 1
+      else
+        terminal_parse_failure('[a-z0-9_]')
+        r3 = nil
+      end
+      if r3
+        @index = i2
+        r2 = nil
+        terminal_parse_failure('[a-z0-9_]', true)
+      else
+        @terminal_failures.pop
+        @index = i2
+        r2 = instantiate_node(SyntaxNode,input, index...index)
+      end
+      s0 << r2
+    end
+    if s0.last
+      r0 = instantiate_node(Piggly::Parser::Nodes::TKeyword,input, i0...index, s0)
+      r0.extend(KwCURRENT0)
+    else
+      @index = i0
+      r0 = nil
+    end
+
+    node_cache[:kwCURRENT][start_index] = r0
 
     r0
   end

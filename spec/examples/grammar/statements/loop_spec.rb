@@ -23,6 +23,15 @@ module Piggly
           cond.source_text.should == 'SELECT * FROM table '
           cond.should be_sql
         end
+
+        it "can loop over parenthesized query without whitespace after IN" do
+          node = parse(:stmtForLoop, 'FOR x IN(SELECT * FROM table) LOOP a := x; END LOOP;')
+          node.should be_statement
+
+          cond = node.find{|e| e.named?(:cond) }
+          cond.source_text.should == '(SELECT * FROM table) '
+          cond.should be_expression
+        end
       end
 
       describe "while loops" do

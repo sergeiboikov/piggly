@@ -92,10 +92,10 @@ module Piggly
       # @param line_number [Integer] 1-based line number
       # @return [Boolean] true if line should be excluded
       def excluded_line?(source, line_number)
-        lines = source.split("\n")
-        return true if line_number < 1 || line_number > lines.length
-        
-        line_content = lines[line_number - 1].strip.downcase
+        max_line = Util::LineNumbers.count(source)
+        return true if line_number < 1 || line_number > max_line
+
+        line_content = source.lines[line_number - 1].strip.downcase
         
         # Exclude lines containing only structural keywords or comments
         excluded_patterns = [
@@ -137,11 +137,9 @@ module Piggly
         start_pos = [start_pos, source_len - 1].min if source_len > 0
         end_pos = [end_pos, source_len - 1].min if source_len > 0
         
-        # Calculate line numbers by counting newlines
-        # Line numbers are 1-based
-        start_line = source[0...start_pos].count("\n") + 1
-        end_line = source[0..end_pos].count("\n") + 1
-        
+        start_line = Util::LineNumbers.at_offset(source, start_pos)
+        end_line = Util::LineNumbers.at_offset(source, end_pos + 1)
+
         [start_line, end_line]
       end
 
