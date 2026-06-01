@@ -271,7 +271,7 @@ grammar PigglyParser
   end
 
   rule varDeclaration
-    varDeclarationMisc / varDeclarationCursor
+    varDeclarationCursor / varDeclarationMisc
   end
 
   rule varDeclarationMisc
@@ -284,7 +284,7 @@ grammar PigglyParser
   end
 
   rule varDeclarationCursor
-    name:tIdentifier tSpace ( ( kwNO tSpace )? kwSCROLL tSpace )? kwCURSOR tSpace
+    name:tIdentifier tSpace ( ( kwNO tSpace )? kwSCROLL tSpace )? kwCURSOR tSpace?
       rval:expressionUntilSemiColon
     tSpace?
     ';' tSpace?

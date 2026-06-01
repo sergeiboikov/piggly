@@ -3974,12 +3974,12 @@ module PigglyParser
     end
 
     i0 = index
-    r1 = _nt_varDeclarationMisc
+    r1 = _nt_varDeclarationCursor
     if r1
       r1 = SyntaxNode.new(input, (index-1)...index) if r1 == true
       r0 = r1
     else
-      r2 = _nt_varDeclarationCursor
+      r2 = _nt_varDeclarationMisc
       if r2
         r2 = SyntaxNode.new(input, (index-1)...index) if r2 == true
         r0 = r2
@@ -4277,16 +4277,12 @@ module PigglyParser
       elements[0]
     end
 
-    def tSpace1
+    def tSpace
       elements[1]
     end
 
     def kwCURSOR
       elements[3]
-    end
-
-    def tSpace2
-      elements[4]
     end
 
     def rval
@@ -4359,36 +4355,41 @@ module PigglyParser
           r11 = _nt_kwCURSOR
           s0 << r11
           if r11
-            r12 = _nt_tSpace
+            r13 = _nt_tSpace
+            if r13
+              r12 = r13
+            else
+              r12 = instantiate_node(SyntaxNode,input, index...index)
+            end
             s0 << r12
             if r12
-              r13 = _nt_expressionUntilSemiColon
-              s0 << r13
-              if r13
-                r15 = _nt_tSpace
-                if r15
-                  r14 = r15
+              r14 = _nt_expressionUntilSemiColon
+              s0 << r14
+              if r14
+                r16 = _nt_tSpace
+                if r16
+                  r15 = r16
                 else
-                  r14 = instantiate_node(SyntaxNode,input, index...index)
+                  r15 = instantiate_node(SyntaxNode,input, index...index)
                 end
-                s0 << r14
-                if r14
+                s0 << r15
+                if r15
                   if (match_len = has_terminal?(';', false, index))
-                    r16 = true
+                    r17 = true
                     @index += match_len
                   else
                     terminal_parse_failure('\';\'')
-                    r16 = nil
+                    r17 = nil
                   end
-                  s0 << r16
-                  if r16
-                    r18 = _nt_tSpace
-                    if r18
-                      r17 = r18
+                  s0 << r17
+                  if r17
+                    r19 = _nt_tSpace
+                    if r19
+                      r18 = r19
                     else
-                      r17 = instantiate_node(SyntaxNode,input, index...index)
+                      r18 = instantiate_node(SyntaxNode,input, index...index)
                     end
-                    s0 << r17
+                    s0 << r18
                   end
                 end
               end
