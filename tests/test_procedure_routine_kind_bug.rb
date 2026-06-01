@@ -90,7 +90,7 @@ puts "=" * 80
 puts
 
 expected_sql = <<~SQL.strip
-create or replace procedure "public"."update_quality_outer" (in "p_param_id" "int8")
+create or replace procedure "public"."update_quality_outer" (in "p_param_id" bigint)
  language plpgsql security definer as $__PIGGLY__$
 begin
 	call public.update_quality_procedure(p_caller_id => p_param_id);
