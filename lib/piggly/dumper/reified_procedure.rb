@@ -11,7 +11,7 @@ module Piggly
         # Ensure source is UTF-8 encoded
         @source = source.to_s.force_encoding('UTF-8').strip
 
-        if type.name == "record" and type.schema == "pg_catalog" and arg_modes.include?("t")
+        if arg_modes.include?("t")
           prefix       = arg_modes.take_while{|m| m != "t" }.length
           type         = RecordType.new(arg_types[prefix..-1], arg_names[prefix..-1], arg_modes[prefix..-1], arg_defaults[prefix..-1])
           arg_modes    = arg_modes[0, prefix]

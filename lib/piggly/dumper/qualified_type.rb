@@ -70,10 +70,10 @@ module Piggly
       end
 
       def quote
-        if @schema
-          '"' + @schema + '"."' + normalize(@name) + '"' + @array
+        if @schema.nil? || @schema == "" || @schema == "pg_catalog"
+          readable(normalize(@name)) + @array
         else
-          '"' + normalize(@name) + '"' + @array
+          '"' + @schema + '"."' + @name + '"' + @array
         end
       end
 
