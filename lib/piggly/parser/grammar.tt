@@ -495,6 +495,7 @@ grammar PigglyParser
     / 'create'
     / 'drop'
     / 'alter'
+    / 'analyze'
     / 'commit'
     / 'rollback'
     / 'copy'

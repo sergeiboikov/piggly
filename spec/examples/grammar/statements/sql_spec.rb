@@ -13,6 +13,14 @@ module Piggly
         rest.should == ''
       end
 
+      it "parses ANALYZE statements" do
+        node, rest = parse_some(:statement, 'ANALYZE tt_test;')
+        node.should be_statement
+        node.count{|e| e.sql? }.should == 1
+        node.find{|e| e.sql? }.source_text.should == 'ANALYZE tt_test;'
+        rest.should == ''
+      end
+
       it "parses MERGE statements" do
         node, rest = parse_some(:statement, <<-SQL.strip)
           MERGE INTO users u
