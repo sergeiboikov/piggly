@@ -62,6 +62,12 @@ module Piggly
           node.should be_statement
           node.count{|e| e.comment? }.should == 3
         end
+
+        it "allows then immediately after closing parenthesis" do
+          node, rest = parse_some(:statement, 'IF exists(select 1)then null; end if;')
+          node.should be_statement
+          rest.should == ''
+        end
       end
 
       describe "if .. then .. else .. end if" do

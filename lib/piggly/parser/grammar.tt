@@ -346,17 +346,17 @@ grammar PigglyParser
 
   rule expressionUntilThen
     head:tSpace? expr:( sqlCaseExpression / tString / skipWords / tSpace !kwTHEN / !tSpace !kwTHEN . )+
-    tail:tSpace &kwTHEN <Piggly::Parser::Nodes::Expression>
+    tail:tSpace? &kwTHEN <Piggly::Parser::Nodes::Expression>
   end
 
   rule expressionUntilWhen
     head:tSpace? expr:( sqlCaseExpression / tString / skipWords / tSpace !kwWHEN / !tSpace !kwWHEN . )+
-    tail:tSpace &kwWHEN <Piggly::Parser::Nodes::Expression>
+    tail:tSpace? &kwWHEN <Piggly::Parser::Nodes::Expression>
   end
 
   rule expressionUntilLoop
     head:tSpace? expr:( sqlCaseExpression / tString / skipWords / tSpace !kwLOOP / !tSpace !kwLOOP . )+
-    tail:tSpace &kwLOOP <Piggly::Parser::Nodes::Expression>
+    tail:tSpace? &kwLOOP <Piggly::Parser::Nodes::Expression>
   end
 
   rule sqlCaseExpression
@@ -366,7 +366,7 @@ grammar PigglyParser
   end
 
   rule skipWords
-    [a-z0-9_]+ <Piggly::Parser::Nodes::TextNode>
+    !keyword [a-z0-9_]+ ![a-z0-9_] <Piggly::Parser::Nodes::TextNode>
   end
 
   #############################################################################

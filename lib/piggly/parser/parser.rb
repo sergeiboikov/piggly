@@ -5354,19 +5354,24 @@ module PigglyParser
       end
       s0 << r3
       if r3
-        r18 = _nt_tSpace
+        r19 = _nt_tSpace
+        if r19
+          r18 = r19
+        else
+          r18 = instantiate_node(SyntaxNode,input, index...index)
+        end
         s0 << r18
         if r18
-          i19 = index
-          r20 = _nt_kwTHEN
-          if r20
-            @index = i19
-            r19 = instantiate_node(SyntaxNode,input, index...index)
+          i20 = index
+          r21 = _nt_kwTHEN
+          if r21
+            @index = i20
+            r20 = instantiate_node(SyntaxNode,input, index...index)
           else
-            @index = i19
-            r19 = nil
+            @index = i20
+            r20 = nil
           end
-          s0 << r19
+          s0 << r20
         end
       end
     end
@@ -5537,19 +5542,24 @@ module PigglyParser
       end
       s0 << r3
       if r3
-        r18 = _nt_tSpace
+        r19 = _nt_tSpace
+        if r19
+          r18 = r19
+        else
+          r18 = instantiate_node(SyntaxNode,input, index...index)
+        end
         s0 << r18
         if r18
-          i19 = index
-          r20 = _nt_kwWHEN
-          if r20
-            @index = i19
-            r19 = instantiate_node(SyntaxNode,input, index...index)
+          i20 = index
+          r21 = _nt_kwWHEN
+          if r21
+            @index = i20
+            r20 = instantiate_node(SyntaxNode,input, index...index)
           else
-            @index = i19
-            r19 = nil
+            @index = i20
+            r20 = nil
           end
-          s0 << r19
+          s0 << r20
         end
       end
     end
@@ -5720,19 +5730,24 @@ module PigglyParser
       end
       s0 << r3
       if r3
-        r18 = _nt_tSpace
+        r19 = _nt_tSpace
+        if r19
+          r18 = r19
+        else
+          r18 = instantiate_node(SyntaxNode,input, index...index)
+        end
         s0 << r18
         if r18
-          i19 = index
-          r20 = _nt_kwLOOP
-          if r20
-            @index = i19
-            r19 = instantiate_node(SyntaxNode,input, index...index)
+          i20 = index
+          r21 = _nt_kwLOOP
+          if r21
+            @index = i20
+            r20 = instantiate_node(SyntaxNode,input, index...index)
           else
-            @index = i19
-            r19 = nil
+            @index = i20
+            r20 = nil
           end
-          s0 << r19
+          s0 << r20
         end
       end
     end
@@ -5885,6 +5900,9 @@ module PigglyParser
     r0
   end
 
+  module SkipWords0
+  end
+
   def _nt_skipWords
     start_index = index
     if node_cache[:skipWords].has_key?(index)
@@ -5896,26 +5914,67 @@ module PigglyParser
       return cached
     end
 
-    s0, i0 = [], index
-    loop do
-      if has_terminal?(@regexps[gr = '\A[a-z0-9_]'] ||= Regexp.new(gr), :regexp, index)
-        r1 = true
-        @index += 1
-      else
-        terminal_parse_failure('[a-z0-9_]')
-        r1 = nil
+    i0, s0 = index, []
+    i1 = index
+    r2 = _nt_keyword
+    if r2
+      @index = i1
+      r1 = nil
+    else
+      @index = i1
+      r1 = instantiate_node(SyntaxNode,input, index...index)
+    end
+    s0 << r1
+    if r1
+      s3, i3 = [], index
+      loop do
+        if has_terminal?(@regexps[gr = '\A[a-z0-9_]'] ||= Regexp.new(gr), :regexp, index)
+          r4 = true
+          @index += 1
+        else
+          terminal_parse_failure('[a-z0-9_]')
+          r4 = nil
+        end
+        if r4
+          s3 << r4
+        else
+          break
+        end
       end
-      if r1
-        s0 << r1
+      if s3.empty?
+        @index = i3
+        r3 = nil
       else
-        break
+        r3 = instantiate_node(SyntaxNode,input, i3...index, s3)
+      end
+      s0 << r3
+      if r3
+        i5 = index
+        if has_terminal?(@regexps[gr = '\A[a-z0-9_]'] ||= Regexp.new(gr), :regexp, index)
+          r6 = true
+          @index += 1
+        else
+          terminal_parse_failure('[a-z0-9_]')
+          r6 = nil
+        end
+        if r6
+          @index = i5
+          r5 = nil
+          terminal_parse_failure('[a-z0-9_]', true)
+        else
+          @terminal_failures.pop
+          @index = i5
+          r5 = instantiate_node(SyntaxNode,input, index...index)
+        end
+        s0 << r5
       end
     end
-    if s0.empty?
+    if s0.last
+      r0 = instantiate_node(Piggly::Parser::Nodes::TextNode,input, i0...index, s0)
+      r0.extend(SkipWords0)
+    else
       @index = i0
       r0 = nil
-    else
-      r0 = instantiate_node(Piggly::Parser::Nodes::TextNode,input, i0...index, s0)
     end
 
     node_cache[:skipWords][start_index] = r0
